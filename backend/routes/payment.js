@@ -6,7 +6,7 @@ const Payment = require('../models/Payment');
 const User = require('../models/User');
 const Course = require('../models/Course');
 const PromoCode = require('../models/PromoCode');
-const { sendEnrollmentEmail, sendAdminNotification } = require('../services/emailService.gmail');
+const { sendEnrollmentEmail, sendAdminNotification } = require('../services/emailService.resend');
 
 // Initialize Cashfree for SDK v5
 const cashfree = new Cashfree(
