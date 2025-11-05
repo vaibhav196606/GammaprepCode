@@ -90,7 +90,7 @@ export default function Login() {
             </form>
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <Link 
                   href={redirect ? `/register?redirect=${redirect}` : '/register'} 
                   className="font-bold text-primary hover:text-blue-700"

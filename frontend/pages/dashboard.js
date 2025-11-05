@@ -152,12 +152,12 @@ export default function Dashboard() {
                     >
                       Complete Payment
                     </a>
-                    <a
+                    <Link
                       href="/payment"
                       className="inline-block bg-white text-yellow-700 border-2 border-yellow-600 px-6 py-3 rounded-lg hover:bg-yellow-50 transition font-semibold text-center"
                     >
                       Start New Payment
-                    </a>
+                    </Link>
                   </div>
                 </div>
               ) : paymentHistory.some(p => p.paymentStatus === 'FAILED') ? (
@@ -181,12 +181,12 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <a
+                    <Link
                       href="/payment"
                       className="inline-block bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition font-semibold text-center shadow-lg"
                     >
                       Try Payment Again
-                    </a>
+                    </Link>
                     <a
                       href="mailto:info@gammaprep.com"
                       className="inline-block bg-white text-red-700 border-2 border-red-600 px-6 py-3 rounded-lg hover:bg-red-50 transition font-semibold text-center"
@@ -205,12 +205,12 @@ export default function Dashboard() {
                     Complete the payment to enroll in the bootcamp.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <a
+                    <Link
                       href="/payment"
                       className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-semibold text-center shadow-lg"
                     >
                       Proceed to Payment
-                    </a>
+                    </Link>
                     <a
                       href="mailto:info@gammaprep.com"
                       className="inline-block bg-white text-primary border-2 border-primary px-6 py-3 rounded-lg hover:bg-gray-50 transition font-semibold text-center"

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 import Layout from '@/components/Layout';
 import axios from 'axios';
 import { FiLoader, FiCheckCircle, FiTag, FiX } from 'react-icons/fi';
@@ -357,7 +358,7 @@ export default function Payment() {
       </div>
 
       {/* Load Cashfree SDK */}
-      <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+      <Script src="https://sdk.cashfree.com/js/v3/cashfree.js" strategy="lazyOnload" />
     </Layout>
   );
 }
