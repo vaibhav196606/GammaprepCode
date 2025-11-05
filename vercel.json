@@ -1,8 +1,8 @@
 {
   "name": "gammaprep-frontend",
   "version": 2,
-  "buildCommand": "cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/.next",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
   "framework": "nextjs",
   "regions": ["sin1"]
 }
