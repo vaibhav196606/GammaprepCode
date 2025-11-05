@@ -6,7 +6,7 @@ const Payment = require('../models/Payment');
 const User = require('../models/User');
 const Course = require('../models/Course');
 const PromoCode = require('../models/PromoCode');
-const { sendEnrollmentEmail, sendAdminNotification } = require('../services/emailService.resend');
+const { sendEnrollmentEmail } = require('../services/emailService.resend');
 
 // Initialize Cashfree for SDK v5
 const cashfree = new Cashfree(
@@ -201,15 +201,6 @@ router.post('/verify', auth, async (req, res) => {
               }
             })
             .catch(err => console.error('Email sending error:', err));
-          
-          // Send notification to admin
-          sendAdminNotification(user.name, user.email, orderDetails)
-            .then(result => {
-              if (result.success) {
-                console.log('Admin notification sent');
-              }
-            })
-            .catch(err => console.error('Admin notification error:', err));
         }
 
         return res.json({

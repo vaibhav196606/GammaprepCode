@@ -179,62 +179,7 @@ const sendEnrollmentEmail = async (userEmail, userName, orderDetails) => {
   }
 };
 
-// Send admin notification email
-const sendAdminNotification = async (userName, userEmail, orderDetails) => {
-  try {
-    const { data, error } = await resend.emails.send({
-      from: 'Gammaprep System <info@gammaprep.com>',
-      to: ['info@gammaprep.com'], // Send to admin
-      subject: `🔔 New Enrollment: ${userName}`,
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .card { background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0; }
-            .details { background: white; padding: 15px; border-radius: 5px; }
-            h2 { color: #667eea; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h2>🎉 New Student Enrolled!</h2>
-            <div class="card">
-              <h3>Student Details:</h3>
-              <div class="details">
-                <p><strong>Name:</strong> ${userName}</p>
-                <p><strong>Email:</strong> ${userEmail}</p>
-                <p><strong>Order ID:</strong> ${orderDetails.orderId}</p>
-                <p><strong>Amount:</strong> ₹${orderDetails.amount.toLocaleString('en-IN')}</p>
-                <p><strong>Payment Date:</strong> ${new Date(orderDetails.paymentTime).toLocaleString('en-IN')}</p>
-                ${orderDetails.transactionId ? `<p><strong>Transaction ID:</strong> ${orderDetails.transactionId}</p>` : ''}
-              </div>
-            </div>
-            <p style="color: #666; font-size: 12px;">This is an automated notification from Gammaprep enrollment system.</p>
-          </div>
-        </body>
-        </html>
-      `
-    });
-
-    if (error) {
-      console.error('Resend admin notification error:', error);
-      return { success: false, error: error.message };
-    }
-
-    console.log('Admin notification sent successfully via Resend:', data.id);
-    return { success: true, messageId: data.id };
-
-  } catch (error) {
-    console.error('Error sending admin notification:', error);
-    return { success: false, error: error.message };
-  }
-};
-
 module.exports = {
-  sendEnrollmentEmail,
-  sendAdminNotification
+  sendEnrollmentEmail
 };
 
