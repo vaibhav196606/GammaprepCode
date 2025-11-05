@@ -45,7 +45,7 @@ export default function Admin() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('${API_URL}/api/admin/users', {
+      const response = await axios.get(`${API_URL}/api/admin/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(response.data);
@@ -56,7 +56,7 @@ export default function Admin() {
 
   const fetchCourseInfo = async () => {
     try {
-      const response = await axios.get('${API_URL}/api/course');
+      const response = await axios.get(`${API_URL}/api/course`);
       setCourseInfo(response.data);
       setNewPrice(response.data.price);
       setNewOriginalPrice(response.data.originalPrice || '');
@@ -77,7 +77,7 @@ export default function Admin() {
 
   const fetchPayments = async () => {
     try {
-      const response = await axios.get('${API_URL}/api/admin/payments', {
+      const response = await axios.get(`${API_URL}/api/admin/payments`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPayments(response.data);
@@ -88,7 +88,7 @@ export default function Admin() {
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get('${API_URL}/api/admin/stats', {
+      const response = await axios.get(`${API_URL}/api/admin/stats`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setStats(response.data);
@@ -117,7 +117,7 @@ export default function Admin() {
     e.preventDefault();
     try {
       await axios.put(
-        '${API_URL}/api/course/price',
+        `${API_URL}/api/course/price`,
         { 
           price: parseInt(newPrice),
           originalPrice: newOriginalPrice ? parseInt(newOriginalPrice) : null
@@ -137,7 +137,7 @@ export default function Admin() {
     e.preventDefault();
     try {
       await axios.put(
-        '${API_URL}/api/course/start-date',
+        `${API_URL}/api/course/start-date`,
         { startDate: newStartDate },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -154,7 +154,7 @@ export default function Admin() {
     e.preventDefault();
     try {
       await axios.put(
-        '${API_URL}/api/course/syllabus',
+        `${API_URL}/api/course/syllabus`,
         { syllabusPdfUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -171,7 +171,7 @@ export default function Admin() {
     e.preventDefault();
     try {
       await axios.put(
-        '${API_URL}/api/course/stats',
+        `${API_URL}/api/course/stats`,
         {
           studentsEnrolled: parseInt(statsForm.studentsEnrolled),
           referralRate: parseInt(statsForm.referralRate),

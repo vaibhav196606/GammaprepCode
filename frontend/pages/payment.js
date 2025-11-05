@@ -29,7 +29,7 @@ export default function Payment() {
 
   useEffect(() => {
     // Fetch course info
-    axios.get('${API_URL}/api/course')
+    axios.get(`${API_URL}/api/course`)
       .then(res => setCourseInfo(res.data))
       .catch(err => console.error('Error fetching course info:', err));
   }, []);
@@ -45,7 +45,7 @@ export default function Payment() {
 
     try {
       const response = await axios.post(
-        '${API_URL}/api/promo/validate',
+        `${API_URL}/api/promo/validate`,
         { code: promoCode },
         {
           headers: {
@@ -95,7 +95,7 @@ export default function Payment() {
     try {
       // Create payment order
       const response = await axios.post(
-        '${API_URL}/api/payment/create-order',
+        `${API_URL}/api/payment/create-order`,
         { promoCode: appliedPromo?.code || null },
         {
           headers: {

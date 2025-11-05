@@ -37,7 +37,7 @@ export default function Dashboard() {
 
   const checkPendingPayment = async () => {
     try {
-      const response = await axios.get('${API_URL}/api/payment/check-pending', {
+      const response = await axios.get(`${API_URL}/api/payment/check-pending`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       
@@ -53,7 +53,7 @@ export default function Dashboard() {
 
   const fetchPaymentHistory = async () => {
     try {
-      const response = await axios.get('${API_URL}/api/payment/history', {
+      const response = await axios.get(`${API_URL}/api/payment/history`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPaymentHistory(response.data.slice(0, 3)); // Show last 3 payments

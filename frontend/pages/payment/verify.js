@@ -25,7 +25,7 @@ export default function VerifyPayment() {
   const verifyPayment = async () => {
     try {
       const response = await axios.post(
-        '${API_URL}/api/payment/verify',
+        `${API_URL}/api/payment/verify`,
         { orderId: order_id },
         {
           headers: {

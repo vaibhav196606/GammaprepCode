@@ -24,7 +24,7 @@ export default function PromoCodeManager({ token }) {
 
   const fetchPromoCodes = async () => {
     try {
-      const response = await axios.get('${API_URL}/api/promo/admin', {
+      const response = await axios.get(`${API_URL}/api/promo/admin`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPromoCodes(response.data);
@@ -62,7 +62,7 @@ export default function PromoCodeManager({ token }) {
       } else {
         // Create new promo code
         await axios.post(
-          '${API_URL}/api/promo/admin',
+          `${API_URL}/api/promo/admin`,
           formData,
           { headers: { Authorization: `Bearer ${token}` } }
         );

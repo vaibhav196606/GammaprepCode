@@ -27,7 +27,7 @@ export default function EditProfileModal({ user, token, onClose, onUpdate }) {
 
     try {
       const response = await axios.put(
-        '${API_URL}/api/users/profile',
+        `${API_URL}/api/users/profile`,
         formData,
         {
           headers: {
