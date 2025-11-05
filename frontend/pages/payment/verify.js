@@ -11,7 +11,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 export default function VerifyPayment() {
   const router = useRouter();
   const { order_id } = router.query;
-  const { token } = useAuth();
+  const { token, user: contextUser } = useAuth();
   const [status, setStatus] = useState('verifying');
   const [message, setMessage] = useState('');
   const [paymentDetails, setPaymentDetails] = useState(null);
@@ -37,6 +37,12 @@ export default function VerifyPayment() {
       if (response.data.success) {
         setStatus('success');
         setMessage(response.data.message);
+        
+        // Force page reload to refresh user data from AuthContext
+        // This will update the enrollment status
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 3000); // Wait 3 seconds to show success message
       } else {
         setStatus('failed');
         setMessage(response.data.message);
@@ -126,6 +132,9 @@ export default function VerifyPayment() {
                   >
                     Go to Dashboard
                   </Link>
+                  <p className="text-sm text-gray-600">
+                    Redirecting to dashboard in a moment...
+                  </p>
                   <p className="text-sm text-gray-600">
                     You will receive class details via email shortly.
                   </p>
