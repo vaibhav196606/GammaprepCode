@@ -79,6 +79,15 @@ export default function Login() {
                 </div>
               </div>
 
+              <div className="flex items-center justify-end mb-4">
+                <Link 
+                  href="/forgot-password" 
+                  className="text-sm text-primary hover:text-blue-700 font-medium"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
               <div className="pt-2">
                 <button
                   type="submit"
