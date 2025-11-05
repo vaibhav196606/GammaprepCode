@@ -1,0 +1,12 @@
+{
+  "name": "gammaprep-frontend",
+  "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/.next",
+  "framework": "nextjs",
+  "regions": ["sin1"],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "@api_url"
+  }
+}
+
