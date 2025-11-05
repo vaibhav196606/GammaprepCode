@@ -6,6 +6,8 @@ import PromoCodeManager from '@/components/PromoCodeManager';
 import axios from 'axios';
 import { FiUsers, FiDollarSign, FiCalendar, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 export default function Admin() {
   const { user, loading, token } = useAuth();
   const router = useRouter();
@@ -43,7 +45,7 @@ export default function Admin() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/users', {
+      const response = await axios.get('${API_URL}/api/admin/users', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(response.data);
@@ -54,7 +56,7 @@ export default function Admin() {
 
   const fetchCourseInfo = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/course');
+      const response = await axios.get('${API_URL}/api/course');
       setCourseInfo(response.data);
       setNewPrice(response.data.price);
       setNewOriginalPrice(response.data.originalPrice || '');
@@ -75,7 +77,7 @@ export default function Admin() {
 
   const fetchPayments = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/payments', {
+      const response = await axios.get('${API_URL}/api/admin/payments', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPayments(response.data);
@@ -86,7 +88,7 @@ export default function Admin() {
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/stats', {
+      const response = await axios.get('${API_URL}/api/admin/stats', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setStats(response.data);
@@ -98,7 +100,7 @@ export default function Admin() {
   const toggleEnrollment = async (userId, currentStatus) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/admin/users/${userId}/enroll`,
+        `${API_URL}/api/admin/users/${userId}/enroll`,
         { isEnrolled: !currentStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -115,7 +117,7 @@ export default function Admin() {
     e.preventDefault();
     try {
       await axios.put(
-        'http://localhost:5000/api/course/price',
+        '${API_URL}/api/course/price',
         { 
           price: parseInt(newPrice),
           originalPrice: newOriginalPrice ? parseInt(newOriginalPrice) : null
@@ -135,7 +137,7 @@ export default function Admin() {
     e.preventDefault();
     try {
       await axios.put(
-        'http://localhost:5000/api/course/start-date',
+        '${API_URL}/api/course/start-date',
         { startDate: newStartDate },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -152,7 +154,7 @@ export default function Admin() {
     e.preventDefault();
     try {
       await axios.put(
-        'http://localhost:5000/api/course/syllabus',
+        '${API_URL}/api/course/syllabus',
         { syllabusPdfUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -169,7 +171,7 @@ export default function Admin() {
     e.preventDefault();
     try {
       await axios.put(
-        'http://localhost:5000/api/course/stats',
+        '${API_URL}/api/course/stats',
         {
           studentsEnrolled: parseInt(statsForm.studentsEnrolled),
           referralRate: parseInt(statsForm.referralRate),
@@ -191,7 +193,7 @@ export default function Admin() {
     if (!confirm('Are you sure you want to delete this user?')) return;
     
     try {
-      await axios.delete(`http://localhost:5000/api/admin/users/${userId}`, {
+      await axios.delete(`${API_URL}/api/admin/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchUsers();

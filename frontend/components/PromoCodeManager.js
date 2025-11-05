@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiTag, FiEdit, FiTrash2, FiToggleLeft, FiToggleRight, FiPlus } from 'react-icons/fi';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 export default function PromoCodeManager({ token }) {
   const [promoCodes, setPromoCodes] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -22,7 +24,7 @@ export default function PromoCodeManager({ token }) {
 
   const fetchPromoCodes = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/promo/admin', {
+      const response = await axios.get('${API_URL}/api/promo/admin', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPromoCodes(response.data);
@@ -52,7 +54,7 @@ export default function PromoCodeManager({ token }) {
       if (editingCode) {
         // Update existing promo code
         await axios.put(
-          `http://localhost:5000/api/promo/admin/${editingCode._id}`,
+          `${API_URL}/api/promo/admin/${editingCode._id}`,
           formData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -60,7 +62,7 @@ export default function PromoCodeManager({ token }) {
       } else {
         // Create new promo code
         await axios.post(
-          'http://localhost:5000/api/promo/admin',
+          '${API_URL}/api/promo/admin',
           formData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -92,7 +94,7 @@ export default function PromoCodeManager({ token }) {
   const handleToggle = async (promoCode) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/promo/admin/${promoCode._id}`,
+        `${API_URL}/api/promo/admin/${promoCode._id}`,
         { isActive: !promoCode.isActive },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -108,7 +110,7 @@ export default function PromoCodeManager({ token }) {
     if (!confirm('Are you sure you want to delete this promo code?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/promo/admin/${id}`, {
+      await axios.delete(`${API_URL}/api/promo/admin/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchPromoCodes();

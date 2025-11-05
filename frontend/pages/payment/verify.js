@@ -6,6 +6,8 @@ import axios from 'axios';
 import { FiLoader, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import Link from 'next/link';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 export default function VerifyPayment() {
   const router = useRouter();
   const { order_id } = router.query;
@@ -23,7 +25,7 @@ export default function VerifyPayment() {
   const verifyPayment = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/payment/verify',
+        '${API_URL}/api/payment/verify',
         { orderId: order_id },
         {
           headers: {
@@ -42,7 +44,7 @@ export default function VerifyPayment() {
 
       // Fetch payment details
       const detailsResponse = await axios.get(
-        `http://localhost:5000/api/payment/status/${order_id}`,
+        `${API_URL}/api/payment/status/${order_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -7,6 +7,8 @@ import axios from 'axios';
 import EditProfileModal from '@/components/EditProfileModal';
 import { FiUser, FiMail, FiPhone, FiCheckCircle, FiXCircle, FiClock, FiAlertCircle, FiEdit } from 'react-icons/fi';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 export default function Dashboard() {
   const { user, loading, token } = useAuth();
   const router = useRouter();
@@ -35,7 +37,7 @@ export default function Dashboard() {
 
   const checkPendingPayment = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/payment/check-pending', {
+      const response = await axios.get('${API_URL}/api/payment/check-pending', {
         headers: { Authorization: `Bearer ${token}` },
       });
       
@@ -51,7 +53,7 @@ export default function Dashboard() {
 
   const fetchPaymentHistory = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/payment/history', {
+      const response = await axios.get('${API_URL}/api/payment/history', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPaymentHistory(response.data.slice(0, 3)); // Show last 3 payments

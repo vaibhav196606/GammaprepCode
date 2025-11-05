@@ -6,6 +6,8 @@ import { useAuth } from '@/context/AuthContext';
 import { FiCheck, FiCalendar, FiDollarSign, FiCheckCircle, FiTarget, FiUsers, FiAward } from 'react-icons/fi';
 import TestimonialMarquee from '@/components/TestimonialMarquee';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 export default function Home() {
   const { user } = useAuth();
   const [courseInfo, setCourseInfo] = useState(null);
@@ -13,7 +15,7 @@ export default function Home() {
 
   useEffect(() => {
     // Fetch course info
-    axios.get('http://localhost:5000/api/course')
+    axios.get(`${API_URL}/api/course`)
       .then(res => setCourseInfo(res.data))
       .catch(err => console.error('Error fetching course info:', err));
 

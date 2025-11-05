@@ -6,6 +6,8 @@ import Layout from '@/components/Layout';
 import axios from 'axios';
 import { FiLoader, FiCheckCircle, FiTag, FiX } from 'react-icons/fi';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 export default function Payment() {
   const { user, loading, token } = useAuth();
   const router = useRouter();
@@ -27,7 +29,7 @@ export default function Payment() {
 
   useEffect(() => {
     // Fetch course info
-    axios.get('http://localhost:5000/api/course')
+    axios.get('${API_URL}/api/course')
       .then(res => setCourseInfo(res.data))
       .catch(err => console.error('Error fetching course info:', err));
   }, []);
@@ -43,7 +45,7 @@ export default function Payment() {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/promo/validate',
+        '${API_URL}/api/promo/validate',
         { code: promoCode },
         {
           headers: {
@@ -93,7 +95,7 @@ export default function Payment() {
     try {
       // Create payment order
       const response = await axios.post(
-        'http://localhost:5000/api/payment/create-order',
+        '${API_URL}/api/payment/create-order',
         { promoCode: appliedPromo?.code || null },
         {
           headers: {

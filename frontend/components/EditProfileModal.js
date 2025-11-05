@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import axios from 'axios';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 export default function EditProfileModal({ user, token, onClose, onUpdate }) {
   const [formData, setFormData] = useState({
     name: user.name || '',
@@ -25,7 +27,7 @@ export default function EditProfileModal({ user, token, onClose, onUpdate }) {
 
     try {
       const response = await axios.put(
-        'http://localhost:5000/api/users/profile',
+        '${API_URL}/api/users/profile',
         formData,
         {
           headers: {
