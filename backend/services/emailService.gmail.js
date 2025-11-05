@@ -1,24 +1,15 @@
 const nodemailer = require('nodemailer');
 
-// Create transporter for Outlook/Office365
+// Alternative: Gmail SMTP configuration (more reliable with cloud providers)
+// If Outlook continues to timeout, use this instead
+
 const createTransporter = () => {
   return nodemailer.createTransport({
-    host: 'smtp.office365.com', // Use office365 SMTP
-    port: 587,
-    secure: false, // Use STARTTLS
+    service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD
-    },
-    tls: {
-      ciphers: 'SSLv3',
-      rejectUnauthorized: false
-    },
-    connectionTimeout: 10000, // 10 seconds
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-    logger: true, // Enable logging
-    debug: true // Enable debug output
+      user: process.env.EMAIL_USER, // Your Gmail address
+      pass: process.env.EMAIL_PASSWORD // Gmail App Password
+    }
   });
 };
 
@@ -146,18 +137,6 @@ const sendEnrollmentEmail = async (userEmail, userName, orderDetails) => {
               </ol>
             </div>
 
-            <div class="card">
-              <h3>📚 Bootcamp Includes:</h3>
-              <ul>
-                <li>✓ Live Interactive Classes (No Recordings)</li>
-                <li>✓ Data Structures & Algorithms (8 weeks)</li>
-                <li>✓ System Design - HLD & LLD (4 weeks)</li>
-                <li>✓ Data Science with Machine Learning (8 weeks)</li>
-                <li>✓ Mock Interviews & Resume Building</li>
-                <li>✓ Assured Job Referrals</li>
-              </ul>
-            </div>
-
             <div style="text-align: center;">
               <a href="https://gammaprep-project.vercel.app/dashboard" class="button">
                 Go to Dashboard
@@ -166,20 +145,14 @@ const sendEnrollmentEmail = async (userEmail, userName, orderDetails) => {
 
             <div class="card" style="background: #fff3cd; border-left: 4px solid #ffc107;">
               <p style="margin: 0;"><strong>📞 Need Help?</strong></p>
-              <p style="margin: 5px 0 0 0;">Contact us at <a href="mailto:info@gammaprep.com">info@gammaprep.com</a> for any queries.</p>
+              <p style="margin: 5px 0 0 0;">Reply to this email or contact us at info@gammaprep.com</p>
             </div>
           </div>
 
           <div class="footer">
             <p><strong>Gammaprep</strong></p>
             <p>Crack interviews for SDE/MLE roles at top product companies</p>
-            <p>
-              <a href="https://gammaprep.com" style="color: #667eea; text-decoration: none;">Website</a> | 
-              <a href="mailto:info@gammaprep.com" style="color: #667eea; text-decoration: none;">Email</a>
-            </p>
-            <p style="color: #999; margin-top: 20px;">
-              © ${new Date().getFullYear()} Gammaprep. All rights reserved.
-            </p>
+            <p>© ${new Date().getFullYear()} Gammaprep. All rights reserved.</p>
           </div>
         </body>
         </html>
@@ -203,7 +176,7 @@ const sendAdminNotification = async (userName, userEmail, orderDetails) => {
 
     const mailOptions = {
       from: `"Gammaprep System" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER, // Send to admin
+      to: 'info@gammaprep.com', // Admin email
       subject: `🔔 New Enrollment: ${userName}`,
       html: `
         <!DOCTYPE html>
@@ -231,7 +204,6 @@ const sendAdminNotification = async (userName, userEmail, orderDetails) => {
                 ${orderDetails.transactionId ? `<p><strong>Transaction ID:</strong> ${orderDetails.transactionId}</p>` : ''}
               </div>
             </div>
-            <p style="color: #666; font-size: 12px;">This is an automated notification from Gammaprep enrollment system.</p>
           </div>
         </body>
         </html>
