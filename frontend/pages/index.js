@@ -334,7 +334,7 @@ export default function Home() {
               <div className="text-4xl font-bold text-gray-900 mb-2">
                 {courseInfo?.stats?.hiringPartners || 50}+
               </div>
-              <div className="text-gray-600">Hiring Partners</div>
+              <div className="text-gray-600">Referring Partners</div>
             </div>
           </div>
         </div>
