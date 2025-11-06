@@ -47,24 +47,20 @@ export default function TestimonialMarquee() {
 
   return (
     <div className="w-full overflow-hidden bg-gradient-to-r from-blue-50 to-purple-50 py-8">
-      <style jsx>{`
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
+            <style jsx>{`
+              @keyframes scroll {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(-50%);
+                }
+              }
 
-        .animate-scroll {
-          animation: scroll 50s linear infinite;
-        }
-
-        .animate-scroll:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
+              .animate-scroll {
+                animation: scroll 50s linear infinite;
+              }
+            `}</style>
 
       <div className="flex animate-scroll gap-4">
         {/* Duplicate the array twice for seamless infinite loop - shows all 23 testimonials */}

@@ -68,7 +68,7 @@ export default function Register() {
                   type="text"
                   required
                   className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  placeholder="John Doe"
+                  placeholder=""
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -84,7 +84,7 @@ export default function Register() {
                   autoComplete="email"
                   required
                   className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  placeholder="john@example.com"
+                  placeholder=""
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -101,7 +101,7 @@ export default function Register() {
                   maxLength="10"
                   pattern="\d{10}"
                   className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  placeholder="1234567890"
+                  placeholder=""
                   value={phone}
                   onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
                 />
