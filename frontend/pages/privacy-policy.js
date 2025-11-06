@@ -19,7 +19,7 @@ export default function PrivacyPolicy() {
                 <section>
                   <h2 className="text-2xl font-bold text-gray-900 mb-3">1. Introduction</h2>
                   <p>
-                    Welcome to Gammaprep, operated by Gamma Tech & Services LLP ("we", "us", or "our"). 
+                    Welcome to Gammaprep, operated by Gamma Tech & Services LLP (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). 
                     We are committed to protecting your personal information and your right to privacy. 
                     This Privacy Policy explains how we collect, use, disclose, and safeguard your information 
                     when you visit our website and use our services.
