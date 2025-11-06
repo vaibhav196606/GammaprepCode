@@ -18,13 +18,16 @@ const cashfreeEnvironment = Cashfree.PRODUCTION;
 
 console.log('Cashfree Environment: FORCED PRODUCTION MODE');
 
+// Initialize with correct API version (2023-08-01)
 const cashfree = new Cashfree(
   cashfreeEnvironment,
   process.env.CASHFREE_APP_ID,
-  process.env.CASHFREE_SECRET_KEY
+  process.env.CASHFREE_SECRET_KEY,
+  process.env.CASHFREE_API_VERSION || '2023-08-01'
 );
 
 console.log('Cashfree SDK v5 initialized successfully in PRODUCTION mode (forced)');
+console.log('Cashfree API Version:', process.env.CASHFREE_API_VERSION || '2023-08-01');
 console.log('Cashfree will use: api.cashfree.com');
 
 // @route   POST /api/payment/create-order
