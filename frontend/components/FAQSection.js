@@ -87,15 +87,6 @@ export default function FAQSection() {
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-gray-600 mb-4">Still have questions?</p>
-          <a
-            href="mailto:info@gammaprep.com"
-            className="inline-block bg-primary text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
-          >
-            Contact Us
-          </a>
-        </div>
       </div>
     </section>
   );
