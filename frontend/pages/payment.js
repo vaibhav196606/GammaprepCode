@@ -107,10 +107,9 @@ export default function Payment() {
       const { paymentSessionId, orderId } = response.data;
 
       // Load Cashfree Checkout
-      // Use production or sandbox mode based on environment
-      const cashfreeMode = process.env.NODE_ENV === 'production' ? 'production' : 'sandbox';
+      // Force production mode temporarily
       const cashfree = window.Cashfree({
-        mode: cashfreeMode
+        mode: 'production'
       });
 
       const checkoutOptions = {
