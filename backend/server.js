@@ -13,6 +13,7 @@ app.use(cors({
     'http://localhost:3000', 
     'http://localhost:3001',
     'https://gammaprep-project.vercel.app',
+    'https://gammaprepcode-production.up.railway.app',
     process.env.FRONTEND_URL
   ].filter(Boolean), // Remove undefined values
   credentials: true
