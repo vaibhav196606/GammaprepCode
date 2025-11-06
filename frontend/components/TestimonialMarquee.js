@@ -49,7 +49,7 @@ export default function TestimonialMarquee() {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translateX(-33.333%);
           }
         }
 
@@ -63,7 +63,7 @@ export default function TestimonialMarquee() {
       `}</style>
 
       <div className="flex animate-scroll gap-4">
-        {/* Duplicate the array multiple times for seamless loop */}
+        {/* Triple the array for seamless loop - animation moves 1/3 of total width */}
         {[...testimonials, ...testimonials, ...testimonials].map((image, index) => (
           <div
             key={index}
