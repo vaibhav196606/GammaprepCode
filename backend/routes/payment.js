@@ -27,8 +27,6 @@ router.post('/create-order', auth, async (req, res) => {
     const user = req.user;
     const { promoCode } = req.body;
 
-    console.log('Creating payment order for user:', user.email);
-
     // Check if user is already enrolled
     if (user.isEnrolled) {
       return res.status(400).json({ message: 'You are already enrolled in the course' });
@@ -177,8 +175,7 @@ router.post('/verify', auth, async (req, res) => {
           user.isEnrolled = true;
           user.enrolledDate = new Date();
           await user.save();
-          console.log('User enrolled successfully:', user.email);
-          
+
           // Send enrollment confirmation email
           const orderDetails = {
             orderId: payment.orderId,
