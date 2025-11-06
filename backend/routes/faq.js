@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const FAQ = require('../models/FAQ');
-const { auth, isAdmin } = require('../middleware/auth');
+const { auth, adminAuth } = require('../middleware/auth');
 
 // @route   GET /api/faq
 // @desc    Get all active FAQs (public)
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 // @route   GET /api/faq/admin
 // @desc    Get all FAQs (admin)
 // @access  Private/Admin
-router.get('/admin', auth, isAdmin, async (req, res) => {
+router.get('/admin', adminAuth, async (req, res) => {
   try {
     const faqs = await FAQ.find().sort({ order: 1, createdAt: 1 });
     res.json(faqs);
@@ -32,7 +32,7 @@ router.get('/admin', auth, isAdmin, async (req, res) => {
 // @route   POST /api/faq
 // @desc    Create a new FAQ
 // @access  Private/Admin
-router.post('/', auth, isAdmin, async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
   try {
     const { question, answer, order, isActive } = req.body;
 
@@ -58,7 +58,7 @@ router.post('/', auth, isAdmin, async (req, res) => {
 // @route   PUT /api/faq/:id
 // @desc    Update an FAQ
 // @access  Private/Admin
-router.put('/:id', auth, isAdmin, async (req, res) => {
+router.put('/:id', adminAuth, async (req, res) => {
   try {
     const { question, answer, order, isActive } = req.body;
 
@@ -84,7 +84,7 @@ router.put('/:id', auth, isAdmin, async (req, res) => {
 // @route   DELETE /api/faq/:id
 // @desc    Delete an FAQ
 // @access  Private/Admin
-router.delete('/:id', auth, isAdmin, async (req, res) => {
+router.delete('/:id', adminAuth, async (req, res) => {
   try {
     const faq = await FAQ.findById(req.params.id);
     if (!faq) {
