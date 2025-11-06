@@ -8,9 +8,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <img 
-              src="https://gammaprep.com/assets/images/Gamma_Logo.svg" 
+              src="/gammaprep_logo_main.png" 
               alt="Gammaprep Logo" 
-              className="h-10 w-auto mb-4 brightness-0 invert"
+              className="h-10 w-auto mb-4"
             />
             <p className="text-gray-400 mb-4">
               Crack interviews for SDE/MLE roles at top product companies.

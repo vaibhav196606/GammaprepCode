@@ -21,7 +21,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <img 
-                src="https://gammaprep.com/assets/images/Gamma_Logo.svg" 
+                src="/gammaprep_logo_main.png" 
                 alt="Gammaprep Logo" 
                 className="h-10 w-auto"
               />
