@@ -31,7 +31,14 @@ export default function TestimonialMarquee() {
       '653e4621c9d3f.png',
     ];
 
-    setTestimonials(testimonialImages);
+    // Shuffle the array randomly using Fisher-Yates algorithm
+    const shuffled = [...testimonialImages];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    setTestimonials(shuffled);
   }, []);
 
   return (
@@ -47,7 +54,7 @@ export default function TestimonialMarquee() {
         }
 
         .animate-scroll {
-          animation: scroll 30s linear infinite;
+          animation: scroll 15s linear infinite;
         }
       `}</style>
 

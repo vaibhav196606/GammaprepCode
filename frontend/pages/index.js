@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 import { FiCheck, FiCalendar, FiDollarSign, FiCheckCircle, FiTarget, FiUsers, FiAward } from 'react-icons/fi';
 import TestimonialMarquee from '@/components/TestimonialMarquee';
+import FAQSection from '@/components/FAQSection';
+import SEOHead from '@/components/SEOHead';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -130,7 +132,9 @@ export default function Home() {
   ];
 
   return (
-    <Layout>
+      <>
+      <SEOHead />
+      <Layout>
       {/* Hero Section */}
       <section className="bg-white py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -584,7 +588,11 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQSection />
     </Layout>
+    </>
   );
 }
 

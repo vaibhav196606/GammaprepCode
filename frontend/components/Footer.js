@@ -1,49 +1,91 @@
 import Link from 'next/link';
+import { FiPhone, FiMail, FiMapPin } from 'react-icons/fi';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-8">
+    <footer className="bg-gray-900 text-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <img 
               src="https://gammaprep.com/assets/images/Gamma_Logo.svg" 
               alt="Gammaprep Logo" 
               className="h-10 w-auto mb-4 brightness-0 invert"
             />
-            <p className="text-gray-400">
+            <p className="text-gray-400 mb-4">
               Crack interviews for SDE/MLE roles at top product companies.
+            </p>
+            <p className="text-sm text-gray-500">
+              Operated by <strong>Gamma Tech & Services LLP</strong>
             </p>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-400 hover:text-white">
+                <Link href="/" className="text-gray-400 hover:text-white transition">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/#syllabus" className="text-gray-400 hover:text-white">
+                <Link href="/#syllabus" className="text-gray-400 hover:text-white transition">
                   Syllabus
                 </Link>
               </li>
               <li>
-                <Link href="/#testimonials" className="text-gray-400 hover:text-white">
+                <Link href="/#testimonials" className="text-gray-400 hover:text-white transition">
                   Testimonials
+                </Link>
+              </li>
+              <li>
+                <Link href="/#faq" className="text-gray-400 hover:text-white transition">
+                  FAQ
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact</h3>
-            <p className="text-gray-400">
-              For any queries, reach out to us at:
-              <br />
-              <a href="mailto:info@gammaprep.com" className="hover:text-white">
-                info@gammaprep.com
-              </a>
-            </p>
+            <h3 className="text-lg font-semibold mb-4">Legal</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-and-conditions" className="text-gray-400 hover:text-white transition">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/refund-policy" className="text-gray-400 hover:text-white transition">
+                  Refund & Cancellation
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-2 text-gray-400">
+                <FiMail className="mt-1 flex-shrink-0" />
+                <a href="mailto:info@gammaprep.com" className="hover:text-white transition">
+                  info@gammaprep.com
+                </a>
+              </li>
+              <li className="flex items-start gap-2 text-gray-400">
+                <FiPhone className="mt-1 flex-shrink-0" />
+                <a href="tel:+918890240404" className="hover:text-white transition">
+                  +91 8890240404
+                </a>
+              </li>
+              <li className="flex items-start gap-2 text-gray-400">
+                <FiMapPin className="mt-1 flex-shrink-0" />
+                <span className="text-sm">
+                  SY.35P&36 2, Mytri Square, Gachibowli - Miyapur Rd, Kondapur, Hyderabad, Telangana 500084
+                </span>
+              </li>
+            </ul>
             <div className="mt-6">
               <h4 className="text-md font-semibold mb-3">Follow Us</h4>
               <div className="flex gap-4">
@@ -84,8 +126,10 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Gammaprep. All rights reserved.</p>
+        <div className="border-t border-gray-800 mt-8 pt-8">
+          <div className="text-center text-gray-400">
+            <p>&copy; {new Date().getFullYear()} Gammaprep - Gamma Tech & Services LLP. All rights reserved.</p>
+          </div>
         </div>
       </div>
     </footer>

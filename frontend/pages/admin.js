@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 import PromoCodeManager from '@/components/PromoCodeManager';
+import FAQManager from '@/components/FAQManager';
 import axios from 'axios';
 import { FiUsers, FiDollarSign, FiCalendar, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 
@@ -295,6 +296,16 @@ export default function Admin() {
                 }`}
               >
                 Promo Codes
+              </button>
+              <button
+                onClick={() => setActiveTab('faq')}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'faq'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                FAQ
               </button>
             </nav>
           </div>
@@ -636,6 +647,11 @@ export default function Admin() {
           {/* Promo Codes Tab */}
           {activeTab === 'promocodes' && (
             <PromoCodeManager token={token} />
+          )}
+
+          {/* FAQ Tab */}
+          {activeTab === 'faq' && (
+            <FAQManager token={token} />
           )}
         </div>
       </div>

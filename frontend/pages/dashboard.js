@@ -41,7 +41,8 @@ export default function Dashboard() {
         headers: { Authorization: `Bearer ${token}` },
       });
       
-      if (response.data.hasPending) {
+      // Only show pending payment if status is PENDING, not FAILED
+      if (response.data.hasPending && response.data.payment.paymentStatus === 'PENDING') {
         setPendingPayment(response.data.payment);
       }
     } catch (error) {
@@ -163,41 +164,6 @@ export default function Dashboard() {
                     </Link>
                   </div>
                 </div>
-              ) : paymentHistory.some(p => p.paymentStatus === 'FAILED') ? (
-                <div className="mt-6 p-6 bg-red-50 rounded-lg border-2 border-red-400">
-                  <div className="flex items-start gap-3 mb-4">
-                    <FiXCircle className="text-3xl text-red-600 flex-shrink-0 mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-red-900 mb-2 text-xl">
-                        Previous Payment Failed
-                      </h3>
-                      <p className="text-red-700 mb-3">
-                        Your previous payment attempt was unsuccessful. Please try again.
-                      </p>
-                      {paymentHistory.filter(p => p.paymentStatus === 'FAILED').slice(0, 1).map(payment => (
-                        <div key={payment._id} className="bg-white p-3 rounded-lg mb-4">
-                          <p className="text-sm text-gray-600">Order ID: <span className="font-mono text-xs">{payment.orderId}</span></p>
-                          <p className="text-sm text-gray-600">Amount: <span className="font-semibold">₹{payment.orderAmount.toLocaleString('en-IN')}</span></p>
-                          <p className="text-sm text-gray-600">Date: {new Date(payment.createdAt).toLocaleString('en-IN')}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Link
-                      href="/payment"
-                      className="inline-block bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition font-semibold text-center shadow-lg"
-                    >
-                      Try Payment Again
-                    </Link>
-                    <a
-                      href="mailto:info@gammaprep.com"
-                      className="inline-block bg-white text-red-700 border-2 border-red-600 px-6 py-3 rounded-lg hover:bg-red-50 transition font-semibold text-center"
-                    >
-                      Contact Support
-                    </a>
-                  </div>
-                </div>
               ) : (
                 <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border-2 border-primary">
                   <h3 className="font-semibold text-gray-900 mb-2 text-xl">
@@ -207,20 +173,12 @@ export default function Dashboard() {
                     Start your journey to crack interviews at top tech companies. 
                     Complete the payment to enroll in the bootcamp.
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Link
-                      href="/payment"
-                      className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-semibold text-center shadow-lg"
-                    >
-                      Proceed to Payment
-                    </Link>
-                    <a
-                      href="mailto:info@gammaprep.com"
-                      className="inline-block bg-white text-primary border-2 border-primary px-6 py-3 rounded-lg hover:bg-gray-50 transition font-semibold text-center"
-                    >
-                      Contact Support
-                    </a>
-                  </div>
+                  <Link
+                    href="/payment"
+                    className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-semibold text-center shadow-lg"
+                  >
+                    Proceed to Payment
+                  </Link>
                 </div>
               )}
             </div>
