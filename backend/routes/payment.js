@@ -20,8 +20,12 @@ const cashfree = new Cashfree(
   process.env.CASHFREE_SECRET_KEY
 );
 
+// Override the default API version (SDK defaults to 2025-01-01)
+cashfree.XApiVersion = "2023-08-01";
+
 console.log('Cashfree configured for PRODUCTION environment');
 console.log('Cashfree Environment:', CFEnvironment.PRODUCTION);
+console.log('Cashfree API Version:', cashfree.XApiVersion);
 
 // @route   POST /api/payment/create-order
 // @desc    Create a payment order
@@ -106,7 +110,7 @@ router.post('/create-order', auth, async (req, res) => {
 
     console.log('Calling Cashfree API...');
     console.log('Request payload:', JSON.stringify(request, null, 2));
-    const response = await cashfree.PGCreateOrder("2023-08-01", request, null, null);
+    const response = await cashfree.PGCreateOrder(request);
     console.log('Cashfree response received:', response);
     
     if (response && response.data) {
@@ -153,7 +157,7 @@ router.post('/verify', auth, async (req, res) => {
 
     // Verify with Cashfree - Fetch order details
     console.log('Fetching order from Cashfree:', orderId);
-    const orderResponse = await cashfree.PGFetchOrder("2023-08-01", orderId);
+    const orderResponse = await cashfree.PGFetchOrder(orderId);
     console.log('Cashfree order response:', orderResponse.data);
     
     if (orderResponse && orderResponse.data) {
@@ -169,7 +173,7 @@ router.post('/verify', auth, async (req, res) => {
         
         // Try to get payment details
         try {
-          const paymentsResponse = await cashfree.PGOrderFetchPayments("2023-08-01", orderId);
+          const paymentsResponse = await cashfree.PGOrderFetchPayments(orderId);
           if (paymentsResponse.data && paymentsResponse.data.length > 0) {
             const paymentData = paymentsResponse.data[0];
             payment.paymentMethod = paymentData.payment_group || null;
@@ -308,7 +312,7 @@ router.get('/check-pending', auth, async (req, res) => {
     if (pendingPayment) {
       // Check status with Cashfree
       try {
-        const orderResponse = await cashfree.PGFetchOrder("2023-08-01", pendingPayment.orderId);
+        const orderResponse = await cashfree.PGFetchOrder(pendingPayment.orderId);
         if (orderResponse && orderResponse.data) {
           const orderStatus = orderResponse.data.order_status;
           
