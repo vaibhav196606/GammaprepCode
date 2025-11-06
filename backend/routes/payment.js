@@ -82,7 +82,6 @@ router.post('/create-order', auth, async (req, res) => {
     });
 
     await payment.save();
-    console.log('Payment record created in database');
 
     // Create Cashfree order
     const request = {
@@ -312,7 +311,7 @@ router.get('/check-pending', auth, async (req, res) => {
           return;
         }
       } catch (err) {
-        console.log('Error checking pending payment:', err.message);
+        // Error checking with Cashfree
       }
     }
 
