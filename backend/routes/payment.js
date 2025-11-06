@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Cashfree } = require('cashfree-pg');
+const { Cashfree, CFEnvironment } = require('cashfree-pg');
 const { auth } = require('../middleware/auth');
 const Payment = require('../models/Payment');
 const User = require('../models/User');
@@ -13,13 +13,15 @@ console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('CASHFREE_APP_ID:', process.env.CASHFREE_APP_ID);
 console.log('CASHFREE_SECRET_KEY exists:', !!process.env.CASHFREE_SECRET_KEY);
 
-// Initialize Cashfree with proper configuration
-Cashfree.XClientId = process.env.CASHFREE_APP_ID;
-Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
-Cashfree.XEnvironment = Cashfree.PRODUCTION;
+// Initialize Cashfree instance with PRODUCTION environment
+const cashfree = new Cashfree(
+  CFEnvironment.PRODUCTION,
+  process.env.CASHFREE_APP_ID,
+  process.env.CASHFREE_SECRET_KEY
+);
 
 console.log('Cashfree configured for PRODUCTION environment');
-console.log('Cashfree Environment:', Cashfree.XEnvironment);
+console.log('Cashfree Environment:', CFEnvironment.PRODUCTION);
 
 // @route   POST /api/payment/create-order
 // @desc    Create a payment order
@@ -103,7 +105,7 @@ router.post('/create-order', auth, async (req, res) => {
     };
 
     console.log('Calling Cashfree API...');
-    const response = await Cashfree.PGCreateOrder("2023-08-01", request);
+    const response = await cashfree.PGCreateOrder("2023-08-01", request);
     console.log('Cashfree response received:', response);
     
     if (response && response.data) {
@@ -150,7 +152,7 @@ router.post('/verify', auth, async (req, res) => {
 
     // Verify with Cashfree - Fetch order details
     console.log('Fetching order from Cashfree:', orderId);
-    const orderResponse = await Cashfree.PGFetchOrder("2023-08-01", orderId);
+    const orderResponse = await cashfree.PGFetchOrder("2023-08-01", orderId);
     console.log('Cashfree order response:', orderResponse.data);
     
     if (orderResponse && orderResponse.data) {
@@ -166,7 +168,7 @@ router.post('/verify', auth, async (req, res) => {
         
         // Try to get payment details
         try {
-          const paymentsResponse = await Cashfree.PGOrderFetchPayments("2023-08-01", orderId);
+          const paymentsResponse = await cashfree.PGOrderFetchPayments("2023-08-01", orderId);
           if (paymentsResponse.data && paymentsResponse.data.length > 0) {
             const paymentData = paymentsResponse.data[0];
             payment.paymentMethod = paymentData.payment_group || null;
@@ -305,7 +307,7 @@ router.get('/check-pending', auth, async (req, res) => {
     if (pendingPayment) {
       // Check status with Cashfree
       try {
-        const orderResponse = await Cashfree.PGFetchOrder("2023-08-01", pendingPayment.orderId);
+        const orderResponse = await cashfree.PGFetchOrder("2023-08-01", pendingPayment.orderId);
         if (orderResponse && orderResponse.data) {
           const orderStatus = orderResponse.data.order_status;
           
