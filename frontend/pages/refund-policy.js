@@ -30,8 +30,8 @@ export default function RefundPolicy() {
                   <div className="bg-blue-50 border-l-4 border-primary p-4 mb-4">
                     <p className="font-semibold text-lg mb-2">50% Refund Policy</p>
                     <p>
-                      Students are eligible for a <strong>50% refund</strong> if they cancel their enrollment within 
-                      <strong> 3 days from the start of the bootcamp</strong>.
+                      Students are eligible for a <strong>50% refund</strong> if they cancel their enrollment within{' '}
+                      <strong>3 days from the start of the bootcamp</strong>.
                     </p>
                   </div>
                   <p className="mb-2">To be eligible for a refund, the following conditions must be met:</p>
@@ -52,7 +52,7 @@ export default function RefundPolicy() {
                     <li>Unauthorized recording or sharing of course materials</li>
                     <li>Failure to attend classes (classes are live with no recordings)</li>
                     <li>Change of mind after the 3-day refund period</li>
-                    <li>Technical issues on the student's end (internet, device, etc.)</li>
+                    <li>Technical issues on the student&apos;s end (internet, device, etc.)</li>
                     <li>Partial completion of the course</li>
                   </ul>
                 </section>
@@ -98,7 +98,7 @@ export default function RefundPolicy() {
                   </p>
                   <ul className="list-disc list-inside ml-4 space-y-1 mt-2">
                     <li>Continue with the new batch schedule</li>
-                    <li>Request a full refund (100%) if the new schedule doesn't suit them</li>
+                    <li>Request a full refund (100%) if the new schedule doesn&apos;t suit them</li>
                   </ul>
                 </section>
 
