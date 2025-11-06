@@ -41,6 +41,10 @@ export default function TestimonialMarquee() {
     setTestimonials(shuffled);
   }, []);
 
+  if (testimonials.length === 0) {
+    return null;
+  }
+
   return (
     <div className="w-full overflow-hidden bg-gradient-to-r from-blue-50 to-purple-50 py-8">
       <style jsx>{`
@@ -49,12 +53,12 @@ export default function TestimonialMarquee() {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-33.333%);
+            transform: translateX(-50%);
           }
         }
 
         .animate-scroll {
-          animation: scroll 23s linear infinite;
+          animation: scroll 50s linear infinite;
         }
 
         .animate-scroll:hover {
@@ -63,15 +67,15 @@ export default function TestimonialMarquee() {
       `}</style>
 
       <div className="flex animate-scroll gap-4">
-        {/* Triple the array for seamless loop - animation moves 1/3 of total width */}
-        {[...testimonials, ...testimonials, ...testimonials].map((image, index) => (
+        {/* Duplicate the array twice for seamless infinite loop - shows all 23 testimonials */}
+        {[...testimonials, ...testimonials].map((image, index) => (
           <div
-            key={index}
+            key={`testimonial-${index}`}
             className="flex-shrink-0"
           >
             <img
               src={`/stories/${image}`}
-              alt={`Student testimonial ${index + 1}`}
+              alt={`Student testimonial ${(index % testimonials.length) + 1}`}
               className="h-64 sm:h-80 md:h-96 w-auto object-cover rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
             />
           </div>
@@ -80,4 +84,3 @@ export default function TestimonialMarquee() {
     </div>
   );
 }
-
