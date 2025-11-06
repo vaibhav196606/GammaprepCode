@@ -13,22 +13,13 @@ console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('CASHFREE_APP_ID:', process.env.CASHFREE_APP_ID);
 console.log('CASHFREE_SECRET_KEY exists:', !!process.env.CASHFREE_SECRET_KEY);
 
-// Force PRODUCTION mode temporarily for testing
-const cashfreeEnvironment = Cashfree.PRODUCTION;
+// Initialize Cashfree with proper configuration
+Cashfree.XClientId = process.env.CASHFREE_APP_ID;
+Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
+Cashfree.XEnvironment = Cashfree.Environment.PRODUCTION;
 
-console.log('Cashfree Environment: FORCED PRODUCTION MODE');
-
-// Initialize with correct API version (2023-08-01)
-const cashfree = new Cashfree(
-  cashfreeEnvironment,
-  process.env.CASHFREE_APP_ID,
-  process.env.CASHFREE_SECRET_KEY,
-  process.env.CASHFREE_API_VERSION || '2023-08-01'
-);
-
-console.log('Cashfree SDK v5 initialized successfully in PRODUCTION mode (forced)');
-console.log('Cashfree API Version:', process.env.CASHFREE_API_VERSION || '2023-08-01');
-console.log('Cashfree will use: api.cashfree.com');
+console.log('Cashfree configured for PRODUCTION environment');
+console.log('Cashfree Environment:', Cashfree.XEnvironment);
 
 // @route   POST /api/payment/create-order
 // @desc    Create a payment order
