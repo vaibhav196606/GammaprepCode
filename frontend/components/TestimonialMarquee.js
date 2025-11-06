@@ -54,7 +54,7 @@ export default function TestimonialMarquee() {
         }
 
         .animate-scroll {
-          animation: scroll 70s linear infinite;
+          animation: scroll 23s linear infinite;
         }
 
         .animate-scroll:hover {
