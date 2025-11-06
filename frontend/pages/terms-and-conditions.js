@@ -33,7 +33,7 @@ export default function TermsAndConditions() {
                     System Design, Data Science, and Machine Learning. Our services include:
                   </p>
                   <ul className="list-disc list-inside ml-4 space-y-1 mt-2">
-                    <li>Live interactive classes (no recordings)</li>
+                    <li>Live interactive classes </li>
                     <li>Study materials and resources</li>
                     <li>Mock interviews and assessments</li>
                     <li>Resume building assistance</li>

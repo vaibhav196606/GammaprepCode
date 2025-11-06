@@ -227,9 +227,10 @@ export default function Dashboard() {
               <h3 className="font-semibold text-gray-900 mb-3">Important Notes</h3>
               <ul className="space-y-2 text-gray-700">
                 <li>• All classes are conducted live online</li>
-                <li>• Class recordings are not available, so attendance is important</li>
-                <li>• You will receive class schedules via email</li>
-                <li>• For any queries, contact info@gammaprep.com</li>
+                <li>• Within 24 hours of enrollment, you will be added to the WhatsApp group.</li>
+                <li>• You will receive class schedules via group</li>
+                <li>• Once the class is over, you will receive the class recording through the group.</li>
+                <li>• For any queries, contact info@gammaprep.com or whatsapp to +91 8890240404</li>
               </ul>
             </div>
           </div>

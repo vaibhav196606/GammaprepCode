@@ -153,7 +153,7 @@ Live Classes Bootcamp for SDE/ML Engineers
 **Added/Modified:**
 
 ```
-✓ Live Interactive Classes (No Recordings) [BOLD]
+✓ Live Interactive Classes [BOLD]
 ✓ Data Structures & Algorithms (8 weeks)
 ✓ System Design - HLD/LLD (4 weeks)
 ✓ Data Science & Machine Learning (4 weeks)

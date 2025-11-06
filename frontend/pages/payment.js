@@ -163,7 +163,7 @@ export default function Payment() {
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-center gap-2">
                     <FiCheckCircle className="text-green-500" />
-                    <span><strong>Live Interactive Classes</strong> (No Recordings)</span>
+                    <span><strong>Live Interactive Classes</strong></span>
                   </li>
                   <li className="flex items-center gap-2">
                     <FiCheckCircle className="text-green-500" />

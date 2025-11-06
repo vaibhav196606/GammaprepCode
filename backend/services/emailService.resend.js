@@ -128,7 +128,7 @@ const sendEnrollmentEmail = async (userEmail, userName, orderDetails) => {
             <div class="card">
               <h3>📚 Bootcamp Includes:</h3>
               <ul>
-                <li>✓ Live Interactive Classes (No Recordings)</li>
+                <li>✓ Live Interactive Classes</li>
                 <li>✓ Data Structures & Algorithms (8 weeks)</li>
                 <li>✓ System Design - HLD & LLD (4 weeks)</li>
                 <li>✓ Data Science with Machine Learning (8 weeks)</li>
