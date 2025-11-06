@@ -86,7 +86,7 @@ export default function RefundPolicy() {
                   <h2 className="text-2xl font-bold text-gray-900 mb-3">5. Payment Gateway Charges</h2>
                   <p>
                     Please note that payment gateway charges and transaction fees are non-refundable and will be deducted 
-                    from your refund amount as per the payment processor's policy.
+                    from your refund amount as per the payment processor&apos;s policy.
                   </p>
                 </section>
 
