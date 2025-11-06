@@ -9,10 +9,6 @@ const PromoCode = require('../models/PromoCode');
 const { sendEnrollmentEmail } = require('../services/emailService.resend');
 
 // Initialize Cashfree for SDK v5
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('CASHFREE_APP_ID:', process.env.CASHFREE_APP_ID);
-console.log('CASHFREE_SECRET_KEY exists:', !!process.env.CASHFREE_SECRET_KEY);
-
 // Initialize Cashfree instance with PRODUCTION environment
 const cashfree = new Cashfree(
   CFEnvironment.PRODUCTION,
@@ -22,10 +18,6 @@ const cashfree = new Cashfree(
 
 // Override the default API version (SDK defaults to 2025-01-01)
 cashfree.XApiVersion = "2023-08-01";
-
-console.log('Cashfree configured for PRODUCTION environment');
-console.log('Cashfree Environment:', CFEnvironment.PRODUCTION);
-console.log('Cashfree API Version:', cashfree.XApiVersion);
 
 // @route   POST /api/payment/create-order
 // @desc    Create a payment order
@@ -108,10 +100,7 @@ router.post('/create-order', auth, async (req, res) => {
       }
     };
 
-    console.log('Calling Cashfree API...');
-    console.log('Request payload:', JSON.stringify(request, null, 2));
     const response = await cashfree.PGCreateOrder(request);
-    console.log('Cashfree response received:', response);
     
     if (response && response.data) {
       // Update payment with session ID
@@ -156,9 +145,7 @@ router.post('/verify', auth, async (req, res) => {
     }
 
     // Verify with Cashfree - Fetch order details
-    console.log('Fetching order from Cashfree:', orderId);
     const orderResponse = await cashfree.PGFetchOrder(orderId);
-    console.log('Cashfree order response:', orderResponse.data);
     
     if (orderResponse && orderResponse.data) {
       const orderData = orderResponse.data;
@@ -180,11 +167,10 @@ router.post('/verify', auth, async (req, res) => {
             payment.transactionId = paymentData.cf_payment_id || null;
           }
         } catch (err) {
-          console.log('Could not fetch payment details:', err.message);
+          // Could not fetch additional payment details
         }
         
         await payment.save();
-        console.log('Payment record updated to SUCCESS');
 
         // Enroll user
         const user = await User.findById(payment.userId);
@@ -205,9 +191,7 @@ router.post('/verify', auth, async (req, res) => {
           // Send email to user
           sendEnrollmentEmail(user.email, user.name, orderDetails)
             .then(result => {
-              if (result.success) {
-                console.log('Enrollment email sent to:', user.email);
-              } else {
+              if (!result.success) {
                 console.error('Failed to send enrollment email:', result.error);
               }
             })
@@ -315,7 +299,7 @@ router.get('/check-pending', auth, async (req, res) => {
         const orderResponse = await cashfree.PGFetchOrder(pendingPayment.orderId);
         if (orderResponse && orderResponse.data) {
           const orderStatus = orderResponse.data.order_status;
-          
+
           res.json({
             hasPending: orderStatus === 'ACTIVE' || orderStatus === 'PAID',
             payment: {

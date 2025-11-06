@@ -170,7 +170,6 @@ const sendEnrollmentEmail = async (userEmail, userName, orderDetails) => {
       return { success: false, error: error.message };
     }
 
-    console.log('Enrollment email sent successfully via Resend:', data.id);
     return { success: true, messageId: data.id };
 
   } catch (error) {

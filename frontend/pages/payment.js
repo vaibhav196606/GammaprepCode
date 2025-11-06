@@ -106,9 +106,6 @@ export default function Payment() {
 
       const { paymentSessionId, orderId } = response.data;
 
-      console.log('Payment Session ID received:', paymentSessionId);
-      console.log('Order ID:', orderId);
-
       // Check if Cashfree SDK is loaded
       if (!window.Cashfree) {
         throw new Error('Cashfree SDK not loaded. Please refresh and try again.');
@@ -125,10 +122,8 @@ export default function Payment() {
         returnUrl: `${window.location.origin}/payment/verify?order_id=${orderId}`
       };
 
-      console.log('Checkout options:', checkoutOptions);
-
-      cashfree.checkout(checkoutOptions).then((result) => {
-        console.log('Payment initiated:', result);
+      cashfree.checkout(checkoutOptions).then(() => {
+        // Payment initiated successfully
       }).catch((error) => {
         console.error('Cashfree checkout error:', error);
         throw error;
@@ -377,7 +372,6 @@ export default function Payment() {
       <Script 
         src="https://sdk.cashfree.com/js/v3/cashfree.js" 
         strategy="beforeInteractive"
-        onLoad={() => console.log('Cashfree SDK loaded')}
         onError={(e) => console.error('Cashfree SDK load error:', e)}
       />
     </Layout>
