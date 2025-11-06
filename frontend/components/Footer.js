@@ -10,7 +10,7 @@ export default function Footer() {
             <img 
               src="/gammaprep_logo_main.png" 
               alt="Gammaprep Logo" 
-              className="h-10 w-auto mb-4"
+              className="h-10 w-auto mb-4 brightness-0 invert"
             />
             <p className="text-gray-400 mb-4">
               Crack interviews for SDE/MLE roles at top product companies.

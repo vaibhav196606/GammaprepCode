@@ -37,8 +37,9 @@ export default function SEOHead({
       {/* Canonical URL */}
       <link rel="canonical" href={url} />
 
-      {/* Favicon */}
-      <link rel="icon" href="/favicon.ico" />
+            {/* Favicon */}
+            <link rel="icon" href="/gammaprep_favicon.png" />
+            <link rel="apple-touch-icon" href="/gammaprep_favicon.png" />
       <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
       {/* Additional Meta Tags */}
