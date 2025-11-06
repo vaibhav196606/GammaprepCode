@@ -106,19 +106,32 @@ export default function Payment() {
 
       const { paymentSessionId, orderId } = response.data;
 
-      // Load Cashfree Checkout
-      // Force production mode temporarily
-      const cashfree = window.Cashfree({
+      console.log('Payment Session ID received:', paymentSessionId);
+      console.log('Order ID:', orderId);
+
+      // Check if Cashfree SDK is loaded
+      if (!window.Cashfree) {
+        throw new Error('Cashfree SDK not loaded. Please refresh and try again.');
+      }
+
+      // Initialize Cashfree for production
+      const cashfree = new window.Cashfree({
         mode: 'production'
       });
 
       const checkoutOptions = {
         paymentSessionId: paymentSessionId,
-        redirectTarget: '_self'
+        redirectTarget: '_self',
+        returnUrl: `${window.location.origin}/payment/verify?order_id=${orderId}`
       };
 
-      cashfree.checkout(checkoutOptions).then(() => {
-        console.log('Payment initiated');
+      console.log('Checkout options:', checkoutOptions);
+
+      cashfree.checkout(checkoutOptions).then((result) => {
+        console.log('Payment initiated:', result);
+      }).catch((error) => {
+        console.error('Cashfree checkout error:', error);
+        throw error;
       });
 
     } catch (error) {
@@ -361,7 +374,12 @@ export default function Payment() {
       </div>
 
       {/* Load Cashfree SDK */}
-      <Script src="https://sdk.cashfree.com/js/v3/cashfree.js" strategy="lazyOnload" />
+      <Script 
+        src="https://sdk.cashfree.com/js/v3/cashfree.js" 
+        strategy="beforeInteractive"
+        onLoad={() => console.log('Cashfree SDK loaded')}
+        onError={(e) => console.error('Cashfree SDK load error:', e)}
+      />
     </Layout>
   );
 }
