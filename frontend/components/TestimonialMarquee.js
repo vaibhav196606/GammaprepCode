@@ -42,7 +42,7 @@ export default function TestimonialMarquee() {
   }, []);
 
   return (
-    <div className="w-full overflow-hidden bg-gradient-to-r from-blue-50 to-purple-50">
+    <div className="w-full overflow-hidden bg-gradient-to-r from-blue-50 to-purple-50 py-8">
       <style jsx>{`
         @keyframes scroll {
           0% {
@@ -54,21 +54,25 @@ export default function TestimonialMarquee() {
         }
 
         .animate-scroll {
-          animation: scroll 15s linear infinite;
+          animation: scroll 40s linear infinite;
+        }
+
+        .animate-scroll:hover {
+          animation-play-state: paused;
         }
       `}</style>
 
-      <div className="flex animate-scroll py-8">
-        {/* Duplicate the array twice for seamless loop */}
-        {[...testimonials, ...testimonials].map((image, index) => (
+      <div className="flex animate-scroll gap-4">
+        {/* Duplicate the array multiple times for seamless loop */}
+        {[...testimonials, ...testimonials, ...testimonials].map((image, index) => (
           <div
             key={index}
-            className="flex-shrink-0 mx-3"
+            className="flex-shrink-0"
           >
             <img
               src={`/stories/${image}`}
               alt={`Student testimonial ${index + 1}`}
-              className="h-96 w-auto object-cover rounded-lg shadow-lg"
+              className="h-64 sm:h-80 md:h-96 w-auto object-cover rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
             />
           </div>
         ))}
