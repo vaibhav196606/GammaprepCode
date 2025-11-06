@@ -105,7 +105,8 @@ router.post('/create-order', auth, async (req, res) => {
     };
 
     console.log('Calling Cashfree API...');
-    const response = await cashfree.PGCreateOrder("2023-08-01", request);
+    console.log('Request payload:', JSON.stringify(request, null, 2));
+    const response = await cashfree.PGCreateOrder("2023-08-01", request, null, null);
     console.log('Cashfree response received:', response);
     
     if (response && response.data) {
