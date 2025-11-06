@@ -43,11 +43,11 @@ router.post('/register', [
 
     await user.save();
 
-    // Create JWT token
+    // Create JWT token - valid for 7 days
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: '30d' }
+      { expiresIn: '7d' }
     );
 
     res.status(201).json({
@@ -93,11 +93,11 @@ router.post('/login', [
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Create JWT token
+    // Create JWT token - valid for 7 days
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: '30d' }
+      { expiresIn: '7d' }
     );
 
     res.json({

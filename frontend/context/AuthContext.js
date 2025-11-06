@@ -53,7 +53,13 @@ export const AuthProvider = ({ children }) => {
         password,
       });
       const { token: newToken, user: userData } = response.data;
+      
+      // Store token in localStorage (persists for 7 days as per JWT expiration)
       localStorage.setItem('token', newToken);
+      
+      // Also store login timestamp for reference
+      localStorage.setItem('loginTime', new Date().toISOString());
+      
       setToken(newToken);
       setUser(userData);
       return { success: true };
@@ -74,7 +80,13 @@ export const AuthProvider = ({ children }) => {
         phone,
       });
       const { token: newToken, user: userData } = response.data;
+      
+      // Store token in localStorage (persists for 7 days as per JWT expiration)
       localStorage.setItem('token', newToken);
+      
+      // Also store login timestamp for reference
+      localStorage.setItem('loginTime', new Date().toISOString());
+      
       setToken(newToken);
       setUser(userData);
       return { success: true };
@@ -105,6 +117,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('loginTime');
     setToken(null);
     setUser(null);
   };

@@ -138,7 +138,7 @@ const sendEnrollmentEmail = async (userEmail, userName, orderDetails) => {
             </div>
 
             <div style="text-align: center;">
-              <a href="https://gammaprep-project.vercel.app/dashboard" class="button">
+              <a href="https://gammaprep.com/dashboard" class="button">
                 Go to Dashboard
               </a>
             </div>
