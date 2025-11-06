@@ -16,7 +16,7 @@ console.log('CASHFREE_SECRET_KEY exists:', !!process.env.CASHFREE_SECRET_KEY);
 // Initialize Cashfree with proper configuration
 Cashfree.XClientId = process.env.CASHFREE_APP_ID;
 Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
-Cashfree.XEnvironment = Cashfree.Environment.PRODUCTION;
+Cashfree.XEnvironment = Cashfree.PRODUCTION;
 
 console.log('Cashfree configured for PRODUCTION environment');
 console.log('Cashfree Environment:', Cashfree.XEnvironment);
