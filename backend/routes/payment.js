@@ -9,13 +9,17 @@ const PromoCode = require('../models/PromoCode');
 const { sendEnrollmentEmail } = require('../services/emailService.resend');
 
 // Initialize Cashfree for SDK v5
+const cashfreeEnvironment = process.env.NODE_ENV === 'production' 
+  ? Cashfree.PRODUCTION 
+  : Cashfree.SANDBOX;
+
 const cashfree = new Cashfree(
-  Cashfree.SANDBOX,
+  cashfreeEnvironment,
   process.env.CASHFREE_APP_ID,
   process.env.CASHFREE_SECRET_KEY
 );
 
-console.log('Cashfree SDK v5 initialized successfully');
+console.log(`Cashfree SDK v5 initialized successfully in ${process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'SANDBOX'} mode`);
 
 // @route   POST /api/payment/create-order
 // @desc    Create a payment order
