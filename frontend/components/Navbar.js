@@ -42,6 +42,7 @@ export default function Navbar() {
             <Link href="/#faq" className="text-gray-700 hover:text-primary font-medium">
               FAQ
             </Link>
+            
             {user ? (
               <>
                 <Link href="/dashboard" className="text-gray-700 hover:text-primary font-medium">
