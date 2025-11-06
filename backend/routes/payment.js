@@ -10,13 +10,13 @@ const { sendEnrollmentEmail } = require('../services/emailService.resend');
 
 // Initialize Cashfree for SDK v5
 console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('Checking environment for Cashfree initialization...');
+console.log('CASHFREE_APP_ID:', process.env.CASHFREE_APP_ID);
+console.log('CASHFREE_SECRET_KEY exists:', !!process.env.CASHFREE_SECRET_KEY);
 
-const cashfreeEnvironment = process.env.NODE_ENV === 'production' 
-  ? Cashfree.PRODUCTION 
-  : Cashfree.SANDBOX;
+// Force PRODUCTION mode temporarily for testing
+const cashfreeEnvironment = Cashfree.PRODUCTION;
 
-console.log('Cashfree Environment Selected:', cashfreeEnvironment);
+console.log('Cashfree Environment: FORCED PRODUCTION MODE');
 
 const cashfree = new Cashfree(
   cashfreeEnvironment,
@@ -24,8 +24,8 @@ const cashfree = new Cashfree(
   process.env.CASHFREE_SECRET_KEY
 );
 
-console.log(`Cashfree SDK v5 initialized successfully in ${cashfreeEnvironment === Cashfree.PRODUCTION ? 'PRODUCTION' : 'SANDBOX'} mode`);
-console.log('Cashfree will use:', cashfreeEnvironment === Cashfree.PRODUCTION ? 'api.cashfree.com' : 'sandbox.cashfree.com');
+console.log('Cashfree SDK v5 initialized successfully in PRODUCTION mode (forced)');
+console.log('Cashfree will use: api.cashfree.com');
 
 // @route   POST /api/payment/create-order
 // @desc    Create a payment order
