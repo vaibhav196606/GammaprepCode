@@ -649,11 +649,51 @@ export default function Admin() {
                   ))}
                 </tbody>
               </table>
+              
+              {/* Payments Pagination */}
+              {payments.length > itemsPerPage && (
+                <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                  <div className="text-sm text-gray-700">
+                    Showing {((paymentsPage - 1) * itemsPerPage) + 1} to {Math.min(paymentsPage * itemsPerPage, payments.length)} of {payments.length} payments
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setPaymentsPage(p => Math.max(1, p - 1))}
+                      disabled={paymentsPage === 1}
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Previous
+                    </button>
+                    <div className="flex gap-1">
+                      {Array.from({ length: Math.ceil(payments.length / itemsPerPage) }, (_, i) => i + 1).map(page => (
+                        <button
+                          key={page}
+                          onClick={() => setPaymentsPage(page)}
+                          className={`px-4 py-2 border rounded-md text-sm font-medium ${
+                            page === paymentsPage
+                              ? 'bg-primary text-white border-primary'
+                              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => setPaymentsPage(p => Math.min(Math.ceil(payments.length / itemsPerPage), p + 1))}
+                      disabled={paymentsPage === Math.ceil(payments.length / itemsPerPage)}
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-          )}
+        )}
 
-          {/* Promo Codes Tab */}
+        {/* Promo Codes Tab */}
           {activeTab === 'promocodes' && (
             <PromoCodeManager token={token} />
           )}
