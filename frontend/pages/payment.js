@@ -191,6 +191,14 @@ export default function Payment() {
                   </li>
                   <li className="flex items-center gap-2">
                     <FiCheckCircle className="text-green-500" />
+                    <span><strong>Mock Interviews & Mock Tests</strong> for comprehensive evaluation</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <FiCheckCircle className="text-green-500" />
+                    <span>Resume Building & LinkedIn Optimization</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <FiCheckCircle className="text-green-500" />
                     <span><strong>Assured Job Referrals</strong> at Amazon, Microsoft, Google, Oracle & more</span>
                   </li>
                   {courseInfo && (

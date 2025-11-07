@@ -446,6 +446,33 @@ export default function Home() {
                 Get guaranteed referrals to top MNCs like Amazon, Microsoft, Google, Oracle, and more after completing the bootcamp.
               </p>
             </div>
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-8 rounded-xl shadow-md hover:shadow-lg transition">
+              <div className="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center mb-4">
+                <span className="text-3xl">📝</span>
+              </div>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Mock Interviews & Tests</h3>
+              <p className="text-gray-700">
+                Regular mock interviews and tests to evaluate your progress and prepare you for real company interviews with expert feedback.
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-8 rounded-xl shadow-md hover:shadow-lg transition">
+              <div className="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mb-4">
+                <span className="text-3xl">👨‍💼</span>
+              </div>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Resume & Profile Building</h3>
+              <p className="text-gray-700">
+                Get personalized guidance on building an impressive resume and optimizing your LinkedIn profile to stand out to recruiters.
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 p-8 rounded-xl shadow-md hover:shadow-lg transition">
+              <div className="w-16 h-16 bg-cyan-600 rounded-full flex items-center justify-center mb-4">
+                <span className="text-3xl">🎓</span>
+              </div>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Lifetime Access & Support</h3>
+              <p className="text-gray-700">
+                Get lifetime access to all course materials, recordings, and continued support from our community of alumni and mentors.
+              </p>
+            </div>
           </div>
         </div>
       </section>
