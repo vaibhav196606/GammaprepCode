@@ -28,6 +28,11 @@ export default function Admin() {
     averagePackage: '',
     hiringPartners: ''
   });
+  
+  // Pagination states
+  const [usersPage, setUsersPage] = useState(1);
+  const [paymentsPage, setPaymentsPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     if (!loading && (!user || !user.isAdmin)) {
@@ -511,7 +516,9 @@ export default function Admin() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {users.map((u) => (
+                  {users
+                    .slice((usersPage - 1) * itemsPerPage, usersPage * itemsPerPage)
+                    .map((u) => (
                     <tr key={u._id}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">{u.name}</div>
@@ -590,7 +597,9 @@ export default function Admin() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {payments.map((payment) => (
+                  {payments
+                    .slice((paymentsPage - 1) * itemsPerPage, paymentsPage * itemsPerPage)
+                    .map((payment) => (
                     <tr key={payment._id}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-mono text-gray-900">
