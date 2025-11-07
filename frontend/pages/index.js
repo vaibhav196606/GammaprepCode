@@ -418,7 +418,7 @@ export default function Home() {
             </h2>
             <p className="text-xl text-gray-600">The complete package for your dream career</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl shadow-md hover:shadow-lg transition">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">🎯</span>
