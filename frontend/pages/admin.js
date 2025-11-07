@@ -562,6 +562,46 @@ export default function Admin() {
                   ))}
                 </tbody>
               </table>
+              
+              {/* Users Pagination */}
+              {users.length > itemsPerPage && (
+                <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                  <div className="text-sm text-gray-700">
+                    Showing {((usersPage - 1) * itemsPerPage) + 1} to {Math.min(usersPage * itemsPerPage, users.length)} of {users.length} users
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setUsersPage(p => Math.max(1, p - 1))}
+                      disabled={usersPage === 1}
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Previous
+                    </button>
+                    <div className="flex gap-1">
+                      {Array.from({ length: Math.ceil(users.length / itemsPerPage) }, (_, i) => i + 1).map(page => (
+                        <button
+                          key={page}
+                          onClick={() => setUsersPage(page)}
+                          className={`px-4 py-2 border rounded-md text-sm font-medium ${
+                            page === usersPage
+                              ? 'bg-primary text-white border-primary'
+                              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => setUsersPage(p => Math.min(Math.ceil(users.length / itemsPerPage), p + 1))}
+                      disabled={usersPage === Math.ceil(users.length / itemsPerPage)}
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           )}
