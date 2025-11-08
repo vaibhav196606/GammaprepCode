@@ -39,7 +39,7 @@ export default function Navbar() {
             <Link href="/#testimonials" className="text-gray-700 hover:text-primary font-medium">
               Testimonials
             </Link>
-            <Link href="/#faq" className="text-gray-700 hover:text-primary font-medium">
+            <Link href="/faq" className="text-gray-700 hover:text-primary font-medium">
               FAQ
             </Link>
             
@@ -113,7 +113,7 @@ export default function Navbar() {
               Testimonials
             </Link>
             <Link
-              href="/#faq"
+              href="/faq"
               className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded"
               onClick={() => setMobileMenuOpen(false)}
             >

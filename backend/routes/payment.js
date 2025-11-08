@@ -184,8 +184,13 @@ router.post('/verify', auth, async (req, res) => {
             transactionId: payment.transactionId
           };
           
+          // Get course info for batch start date
+          const Course = require('../models/Course');
+          const courseInfo = await Course.findOne();
+          const batchStartDate = courseInfo?.startDate;
+          
           // Send email to user
-          sendEnrollmentEmail(user.email, user.name, orderDetails)
+          sendEnrollmentEmail(user.email, user.name, orderDetails, batchStartDate)
             .then(result => {
               if (!result.success) {
                 console.error('Failed to send enrollment email:', result.error);

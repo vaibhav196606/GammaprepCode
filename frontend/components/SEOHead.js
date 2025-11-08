@@ -4,8 +4,8 @@ export default function SEOHead({
   title = 'Gammaprep - Crack SDE/MLE Interviews at Top Product Companies',
   description = 'Join Gammaprep Live Classes Bootcamp for comprehensive placement preparation. Learn DSA, System Design, Data Science & Machine Learning. 100% placement assistance with assured job referrals.',
   keywords = 'gammaprep, placement bootcamp, coding interview, SDE interview preparation, MLE preparation, DSA course, System Design, Machine Learning, Data Science, job placement, tech interview, FAANG preparation, product companies',
-  ogImage = 'https://gammaprep-project.vercel.app/og-image.jpg',
-  url = 'https://gammaprep-project.vercel.app'
+  ogImage = 'https://gammaprep.com/gammaprep_logo_main.png',
+  url = 'https://gammaprep.com'
 }) {
   return (
     <Head>
@@ -56,8 +56,8 @@ export default function SEOHead({
             "@type": "Organization",
             "name": "Gammaprep",
             "legalName": "Gamma Tech & Services LLP",
-            "url": "https://gammaprep-project.vercel.app",
-            "logo": "https://gammaprep-project.vercel.app/logo.png",
+            "url": "https://gammaprep.com",
+            "logo": "https://gammaprep.com/gammaprep_logo_main.png",
             "foundingDate": "2024",
             "address": {
               "@type": "PostalAddress",
@@ -94,7 +94,7 @@ export default function SEOHead({
             "provider": {
               "@type": "Organization",
               "name": "Gammaprep",
-              "sameAs": "https://gammaprep-project.vercel.app"
+              "sameAs": "https://gammaprep.com"
             },
             "educationalLevel": "Professional Development",
             "courseCode": "GAMMAPREP-001",
