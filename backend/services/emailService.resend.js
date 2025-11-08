@@ -4,7 +4,14 @@ const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Send enrollment confirmation email
-const sendEnrollmentEmail = async (userEmail, userName, orderDetails) => {
+const sendEnrollmentEmail = async (userEmail, userName, orderDetails, batchStartDate) => {
+  const formattedStartDate = batchStartDate 
+    ? new Date(batchStartDate).toLocaleDateString('en-IN', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      })
+    : 'To be announced';
   try {
     const { data, error } = await resend.emails.send({
       from: 'Gammaprep Bootcamp <info@gammaprep.com>',
@@ -16,145 +23,122 @@ const sendEnrollmentEmail = async (userEmail, userName, orderDetails) => {
         <head>
           <style>
             body {
-              font-family: Arial, sans-serif;
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
               line-height: 1.6;
               color: #333;
               max-width: 600px;
               margin: 0 auto;
+              padding: 0;
             }
             .header {
               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-              padding: 30px;
-              text-align: center;
               color: white;
+              padding: 40px 30px;
+              text-align: center;
+              border-radius: 10px 10px 0 0;
+            }
+            .logo {
+              max-width: 200px;
+              height: auto;
+              margin-bottom: 20px;
             }
             .content {
+              background: #f9fafb;
               padding: 30px;
-              background: #f9f9f9;
+              border-radius: 0 0 10px 10px;
             }
-            .card {
-              background: white;
+            .highlight-box {
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white;
               padding: 20px;
-              margin: 20px 0;
               border-radius: 8px;
-              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+              margin: 20px 0;
+              text-align: center;
             }
             .details {
-              background: #f0f0f0;
-              padding: 15px;
-              border-radius: 5px;
-              margin: 15px 0;
-            }
-            .details-row {
-              display: flex;
-              justify-content: space-between;
-              margin: 8px 0;
-            }
-            .button {
-              display: inline-block;
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-              color: white !important;
-              padding: 12px 30px;
-              text-decoration: none;
-              border-radius: 5px;
+              background: white;
+              padding: 20px;
+              border-radius: 8px;
               margin: 20px 0;
+              border-left: 4px solid #667eea;
+            }
+            .info-box {
+              background: #e0e7ff;
+              padding: 15px;
+              border-radius: 8px;
+              margin: 15px 0;
+              border-left: 4px solid #4f46e5;
             }
             .footer {
               text-align: center;
               padding: 20px;
               color: #666;
-              font-size: 12px;
+              font-size: 14px;
             }
-            .checkmark {
-              color: #10b981;
-              font-size: 20px;
+            ul {
+              margin: 10px 0;
+              padding-left: 20px;
+            }
+            ul li {
+              margin: 8px 0;
             }
           </style>
         </head>
         <body>
           <div class="header">
-            <h1>🎉 Enrollment Successful!</h1>
-            <p>Welcome to Gammaprep Live Classes Bootcamp</p>
+            <img src="https://gammaprep.com/gammaprep_logo_main.png" alt="Gammaprep Logo" class="logo" />
+            <h1>🎉 Welcome to Gammaprep Live Bootcamp!</h1>
           </div>
-          
           <div class="content">
-            <div class="card">
-              <h2>Hi ${userName}! 👋</h2>
-              <p>Congratulations! Your enrollment in the <strong>Gammaprep Live Classes Bootcamp</strong> has been confirmed.</p>
-              
-              <p><span class="checkmark">✓</span> Payment received successfully</p>
-              <p><span class="checkmark">✓</span> Your spot in the bootcamp is confirmed</p>
-              <p><span class="checkmark">✓</span> You're all set to start your journey!</p>
+            <h2>Hi ${userName},</h2>
+            <p>Congratulations! Your enrollment in the <strong>Gammaprep Live Classes Bootcamp</strong> has been confirmed. We're excited to have you on board! 🚀</p>
+            
+            <div class="highlight-box">
+              <h3 style="margin-top: 0;">📅 Classes Start From</h3>
+              <p style="font-size: 24px; font-weight: bold; margin: 10px 0;">${formattedStartDate}</p>
             </div>
 
-            <div class="card">
-              <h3>📋 Payment Details</h3>
-              <div class="details">
-                <div class="details-row">
-                  <span><strong>Order ID:</strong></span>
-                  <span>${orderDetails.orderId}</span>
-                </div>
-                <div class="details-row">
-                  <span><strong>Amount Paid:</strong></span>
-                  <span>₹${orderDetails.amount.toLocaleString('en-IN')}</span>
-                </div>
-                <div class="details-row">
-                  <span><strong>Payment Date:</strong></span>
-                  <span>${new Date(orderDetails.paymentTime).toLocaleDateString('en-IN', { 
-                    day: 'numeric', 
-                    month: 'long', 
-                    year: 'numeric' 
-                  })}</span>
-                </div>
-                ${orderDetails.transactionId ? `
-                <div class="details-row">
-                  <span><strong>Transaction ID:</strong></span>
-                  <span style="font-size: 11px;">${orderDetails.transactionId}</span>
-                </div>
-                ` : ''}
-              </div>
+            <div class="details">
+              <h3>📋 Enrollment Details</h3>
+              <p><strong>Order ID:</strong> ${orderDetails.orderId}</p>
+              <p><strong>Amount Paid:</strong> ₹${orderDetails.amount.toLocaleString('en-IN')}</p>
+              <p><strong>Payment Date:</strong> ${new Date(orderDetails.paymentTime).toLocaleDateString('en-IN')}</p>
+              ${orderDetails.transactionId ? `<p><strong>Transaction ID:</strong> ${orderDetails.transactionId}</p>` : ''}
             </div>
 
-            <div class="card">
-              <h3>🚀 What's Next?</h3>
-              <ol>
-                <li><strong>Class Schedule:</strong> You'll receive the class schedule and meeting links within 24 hours</li>
-                <li><strong>WhatsApp Group:</strong> You'll be added to the batch WhatsApp group soon</li>
-                <li><strong>Course Materials:</strong> Access to all study materials will be shared before the first class</li>
-                <li><strong>Mentor Connect:</strong> Direct access to mentors throughout the bootcamp</li>
-              </ol>
+            <h3>🚀 What Happens Next?</h3>
+            
+            <div class="info-box">
+              <p style="margin: 0;"><strong>📱 WhatsApp Group:</strong> You will be added to our exclusive WhatsApp group within <strong>24 hours</strong>. All course updates, class links, and materials will be shared there.</p>
             </div>
 
-            <div class="card">
-              <h3>📚 Bootcamp Includes:</h3>
-              <ul>
-                <li>✓ Live Interactive Classes</li>
-                <li>✓ Data Structures & Algorithms (8 weeks)</li>
-                <li>✓ System Design - HLD & LLD (4 weeks)</li>
-                <li>✓ Data Science with Machine Learning (8 weeks)</li>
-                <li>✓ Mock Interviews & Resume Building</li>
-                <li>✓ Assured Job Referrals</li>
-              </ul>
+            <h3>📚 What You'll Get:</h3>
+            <ul>
+              <li><strong>Live Interactive Classes</strong> - Learn from industry experts in real-time</li>
+              <li><strong>Class Recordings</strong> - After each class, recordings will be shared in the WhatsApp group for revision</li>
+              <li><strong>Course Materials</strong> - Comprehensive study materials and resources</li>
+              <li><strong>Mock Interviews & Tests</strong> - Regular evaluation and feedback</li>
+              <li><strong>Mentor Support</strong> - Connect with your mentor once the classes begin for personalized guidance</li>
+              <li><strong>Assured Job Referrals</strong> - Get referrals to top MNCs after course completion</li>
+            </ul>
+
+            <div class="info-box">
+              <p style="margin: 0;"><strong>💡 Pro Tip:</strong> Keep your WhatsApp active and check the group regularly for important updates and class schedules!</p>
             </div>
 
-            <div style="text-align: center;">
-              <a href="https://gammaprep.com/dashboard" class="button">
-                Go to Dashboard
-              </a>
-            </div>
+            <p>If you have any questions before the bootcamp starts, feel free to reach out to us at <a href="mailto:info@gammaprep.com" style="color: #667eea;">info@gammaprep.com</a> or WhatsApp us at <strong>+91 8890240404</strong>.</p>
 
-            <div class="card" style="background: #fff3cd; border-left: 4px solid #ffc107;">
-              <p style="margin: 0;"><strong>📞 Need Help?</strong></p>
-              <p style="margin: 5px 0 0 0;">Contact us at <a href="mailto:info@gammaprep.com">info@gammaprep.com</a> for any queries.</p>
-            </div>
+            <p style="font-size: 18px; margin-top: 30px;">We're excited to help you crack your dream job! 🎯</p>
+
+            <p>Best regards,<br/><strong>The Gammaprep Team</strong></p>
           </div>
-
           <div class="footer">
-            <p><strong>Gammaprep</strong></p>
+            <p><strong>Gammaprep - Gamma Tech & Services LLP</strong></p>
             <p>Crack interviews for SDE/MLE roles at top product companies</p>
             <p>
-              <a href="https://gammaprep.com" style="color: #667eea; text-decoration: none;">Website</a> | 
-              <a href="mailto:info@gammaprep.com" style="color: #667eea; text-decoration: none;">Email</a>
+              <a href="https://gammaprep.com" style="color: #667eea; text-decoration: none;">Website</a> |
+              <a href="mailto:info@gammaprep.com" style="color: #667eea; text-decoration: none;">Email</a> |
+              <a href="https://wa.me/918890240404" style="color: #667eea; text-decoration: none;">WhatsApp</a>
             </p>
             <p style="color: #999; margin-top: 20px;">
               © ${new Date().getFullYear()} Gammaprep. All rights reserved.
