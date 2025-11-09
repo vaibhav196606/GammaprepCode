@@ -46,11 +46,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (email, password, captchaToken) => {
     try {
       const response = await axios.post(`${API_URL}/api/auth/login`, {
         email,
         password,
+        captchaToken,
       });
       const { token: newToken, user: userData } = response.data;
       
@@ -71,13 +72,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password, phone) => {
+  const register = async (name, email, password, phone, captchaToken) => {
     try {
       const response = await axios.post(`${API_URL}/api/auth/register`, {
         name,
         email,
         password,
         phone,
+        captchaToken,
       });
       const { token: newToken, user: userData } = response.data;
       

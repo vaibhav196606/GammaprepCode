@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 import Link from 'next/link';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -10,13 +11,21 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
   const { register } = useAuth();
   const router = useRouter();
   const { redirect } = router.query;
+  const recaptchaRef = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // Validate CAPTCHA
+    if (!captchaToken) {
+      setError('Please complete the CAPTCHA verification');
+      return;
+    }
 
     // Validate phone number
     if (!/^\d{10}$/.test(phone)) {
@@ -25,17 +34,27 @@ export default function Register() {
     }
 
     try {
-      const result = await register(name, email, password, phone);
+      const result = await register(name, email, password, phone, captchaToken);
       if (result.success) {
         // Redirect to specified page or dashboard
         router.push(redirect || '/dashboard');
       } else {
         setError(result.message || 'Registration failed. Please try again.');
+        // Reset reCAPTCHA on error
+        recaptchaRef.current?.reset();
+        setCaptchaToken('');
       }
     } catch (err) {
       setError('Unable to connect to server. Please make sure the backend is running.');
       console.error('Registration error:', err);
+      // Reset reCAPTCHA on error
+      recaptchaRef.current?.reset();
+      setCaptchaToken('');
     }
+  };
+
+  const handleCaptchaChange = (token) => {
+    setCaptchaToken(token);
   };
 
   return (
@@ -125,10 +144,20 @@ export default function Register() {
               </div>
             </div>
 
+            {/* reCAPTCHA */}
+            <div className="flex justify-center">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'}
+                onChange={handleCaptchaChange}
+              />
+            </div>
+
             <div className="pt-2">
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-base font-bold rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition shadow-lg"
+                disabled={!captchaToken}
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-base font-bold rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Create Account
               </button>

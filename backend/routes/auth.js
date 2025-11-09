@@ -3,8 +3,29 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
+const axios = require('axios');
 const User = require('../models/User');
 const { auth } = require('../middleware/auth');
+
+// Function to verify reCAPTCHA token
+const verifyRecaptcha = async (token) => {
+  try {
+    const response = await axios.post(
+      `https://www.google.com/recaptcha/api/siteverify`,
+      null,
+      {
+        params: {
+          secret: process.env.RECAPTCHA_SECRET_KEY,
+          response: token,
+        },
+      }
+    );
+    return response.data.success;
+  } catch (error) {
+    console.error('reCAPTCHA verification error:', error);
+    return false;
+  }
+};
 
 // @route   POST /api/auth/register
 // @desc    Register a new user
@@ -13,14 +34,21 @@ router.post('/register', [
   body('name').notEmpty().withMessage('Name is required'),
   body('email').isEmail().withMessage('Please enter a valid email'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-  body('phone').isLength({ min: 10, max: 10 }).withMessage('Phone must be exactly 10 digits').isNumeric().withMessage('Phone must contain only numbers')
+  body('phone').isLength({ min: 10, max: 10 }).withMessage('Phone must be exactly 10 digits').isNumeric().withMessage('Phone must contain only numbers'),
+  body('captchaToken').notEmpty().withMessage('CAPTCHA verification is required')
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password, phone } = req.body;
+  const { name, email, password, phone, captchaToken } = req.body;
+
+  // Verify reCAPTCHA
+  const isValidCaptcha = await verifyRecaptcha(captchaToken);
+  if (!isValidCaptcha) {
+    return res.status(400).json({ message: 'CAPTCHA verification failed. Please try again.' });
+  }
 
   try {
     // Check if user already exists
@@ -71,14 +99,21 @@ router.post('/register', [
 // @access  Public
 router.post('/login', [
   body('email').isEmail().withMessage('Please enter a valid email'),
-  body('password').notEmpty().withMessage('Password is required')
+  body('password').notEmpty().withMessage('Password is required'),
+  body('captchaToken').notEmpty().withMessage('CAPTCHA verification is required')
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { email, password } = req.body;
+  const { email, password, captchaToken } = req.body;
+
+  // Verify reCAPTCHA
+  const isValidCaptcha = await verifyRecaptcha(captchaToken);
+  if (!isValidCaptcha) {
+    return res.status(400).json({ message: 'CAPTCHA verification failed. Please try again.' });
+  }
 
   try {
     // Check if user exists
