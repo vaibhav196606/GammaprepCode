@@ -131,7 +131,7 @@ export default function Navbar() {
               href="https://calendly.com/vaibhavgoyal2024/demo-with-vaibhav"
               target="_blank"
               rel="noopener noreferrer"
-              className="block px-3 py-2 text-white bg-green-500 hover:bg-green-600 rounded text-center font-medium"
+              className="block px-3 py-2 text-green-600 border border-green-500 rounded text-center font-semibold hover:bg-green-50 transition"
               onClick={() => setMobileMenuOpen(false)}
             >
               Book a Demo
