@@ -42,6 +42,14 @@ export default function Navbar() {
             <Link href="/faq" className="text-gray-700 hover:text-primary font-medium">
               FAQ
             </Link>
+            <a
+              href="https://calendly.com/vaibhavgoyal2024/demo-with-vaibhav"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+            >
+              Book a Demo
+            </a>
             
             {user ? (
               <>
@@ -119,6 +127,15 @@ export default function Navbar() {
             >
               FAQ
             </Link>
+            <a
+              href="https://calendly.com/vaibhavgoyal2024/demo-with-vaibhav"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block px-3 py-2 text-white bg-green-500 hover:bg-green-600 rounded text-center font-medium"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Book a Demo
+            </a>
             {user ? (
               <>
                 <Link
