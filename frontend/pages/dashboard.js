@@ -173,12 +173,22 @@ export default function Dashboard() {
                     Start your journey to crack interviews at top tech companies. 
                     Complete the payment to enroll in the bootcamp.
                   </p>
-                  <Link
-                    href="/payment"
-                    className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-semibold text-center shadow-lg"
-                  >
-                    Proceed to Payment
-                  </Link>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Link
+                      href="/payment"
+                      className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition font-semibold text-center shadow-lg"
+                    >
+                      Proceed to Payment
+                    </Link>
+                    <a
+                      href="https://calendly.com/vaibhavgoyal2024/demo-with-vaibhav"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-green-500 text-white px-8 py-3 rounded-lg hover:bg-green-600 transition font-semibold text-center shadow-lg"
+                    >
+                      Book a Demo
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
