@@ -128,7 +128,7 @@ export default function Navbar() {
               FAQ
             </Link>
             <a
-              href="https://calendly.com/vaibhavgoyal2024/demo-with-vaibhav"
+              href="https://forms.gle/5jkSUEV2GWnYr7dC8"
               target="_blank"
               rel="noopener noreferrer"
               className="block px-3 py-2 text-green-600 border border-green-500 rounded text-center font-semibold hover:bg-green-50 transition"
