@@ -592,18 +592,18 @@ export default async function HomePage() {
       {/* Final CTA */}
       <section className="py-20 px-4">
         <div className="container max-w-3xl text-center">
-          <div className="gradient-primary rounded-3xl p-12 text-white">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="gradient-primary rounded-3xl px-6 py-10 sm:p-12 text-white">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
               Ready to find out what&apos;s blocking you?
             </h2>
-            <p className="text-white/80 text-lg mb-8">
+            <p className="text-white/80 text-base sm:text-lg mb-8">
               Start with a ₹499 Career Audit. Get your gaps, your action plan,
               and clarity - in 48 hours.
             </p>
             <Link href="/products/career-audit" className="block w-full sm:w-auto">
               <Button
-                size="xl"
-                className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 shadow-lg"
+                size="lg"
+                className="w-full sm:w-auto sm:text-base sm:h-14 sm:px-10 sm:font-semibold bg-white text-primary hover:bg-white/90 shadow-lg"
               >
                 Get My Career Audit - ₹499
                 <ArrowRight className="h-5 w-5" />

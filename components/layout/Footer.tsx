@@ -113,7 +113,7 @@ export default function Footer() {
             <h4 className="font-semibold text-sm mb-3">Company</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/testimonials" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/stories" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Reviews
                 </Link>
               </li>
