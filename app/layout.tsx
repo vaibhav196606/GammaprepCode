@@ -3,12 +3,14 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import { createClient } from "@/lib/supabase/server";
 import AppChrome from "@/components/layout/AppChrome";
+import MetaPixelTracker from "@/components/MetaPixelTracker";
 import { Toaster } from "sonner";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "545956210757805";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://gammaprep.com"),
@@ -90,6 +92,24 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <Script
+          id="meta-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '${META_PIXEL_ID}');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
         {GA_ID && (
           <>
             <Script
@@ -106,6 +126,7 @@ export default async function RootLayout({
             </Script>
           </>
         )}
+        <MetaPixelTracker />
         <AppChrome user={user} profile={profile}>
           {children}
         </AppChrome>
