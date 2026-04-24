@@ -15,7 +15,8 @@
       "Bash(curl -s -o public/logos/google.svg \"https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg\")",
       "Bash(curl -s -o public/logos/meta.svg \"https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg\")",
       "Bash(xargs grep *)",
-      "Bash(xargs ls *)"
+      "Bash(xargs ls *)",
+      "Bash(curl -s https://gammaprep.com)"
     ]
   }
 }
