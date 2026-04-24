@@ -465,7 +465,7 @@ export default async function HomePage() {
             ))}
           </div>
 
-          <div className="text-center mt-10">
+          <div className="flex justify-center mt-10">
             <Link href="/products/career-audit">
               <Button size="lg" className="shadow-md shadow-primary/20">
                 Start with Career Audit for ₹499 <ArrowRight className="h-4 w-4" />

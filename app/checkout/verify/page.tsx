@@ -58,7 +58,7 @@ function VerifyContent() {
   }, [orderId]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-8">
+    <div className="min-h-screen flex items-start md:items-center justify-center p-8 pt-16 md:pt-8">
       <div className="text-center max-w-md space-y-6">
         {(status === "loading" || status === "pending") && (
           <>
@@ -133,7 +133,7 @@ export default function VerifyPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen flex items-start md:items-center justify-center pt-16 md:pt-0">
           <Loader2 className="h-16 w-16 animate-spin text-primary" />
         </div>
       }

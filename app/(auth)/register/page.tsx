@@ -53,7 +53,7 @@ export default function RegisterPage({
       </div>
 
       {/* Right panel */}
-      <div className="flex-1 flex items-center justify-center p-8">
+      <div className="flex-1 flex items-start md:items-center justify-center p-8">
         <div className="w-full max-w-md space-y-8">
           <div>
             <h1 className="text-3xl font-bold">Create your account</h1>

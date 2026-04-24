@@ -103,7 +103,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-8">
+    <div className="min-h-screen flex items-start md:items-center justify-center p-8 pt-16 md:pt-8">
       <div className="w-full max-w-md">
         <Link
           href="/login"
