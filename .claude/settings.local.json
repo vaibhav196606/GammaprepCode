@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs wc *)",
+      "Bash(npm install *)",
+      "Bash(node -e \"const p = require\\('./node_modules/@supabase/supabase-js/package.json'\\); console.log\\(p.version\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/typescript/package.json'\\); console.log\\(p.version\\)\")",
+      "Bash(npm run *)",
+      "Bash(npx tsc *)",
+      "Bash(node -e \"const p = require\\('./node_modules/@supabase/ssr/package.json'\\); console.log\\(p.version\\)\")",
+      "Bash(git ls-tree *)",
+      "Bash(mkdir -p \"c:/Users/vaibh/Desktop/GammaprepCode/public/logos\")",
+      "Bash(curl -s -o public/logos/amazon.svg \"https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg\")",
+      "Bash(curl -s -o public/logos/microsoft.svg \"https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg\")",
+      "Bash(curl -s -o public/logos/google.svg \"https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg\")",
+      "Bash(curl -s -o public/logos/meta.svg \"https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg\")",
+      "Bash(xargs grep *)",
+      "Bash(xargs ls *)"
+    ]
+  }
+}
