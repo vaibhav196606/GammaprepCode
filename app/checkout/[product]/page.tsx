@@ -28,7 +28,7 @@ const PRODUCT_INFO: Record<
   "placement-mentorship": {
     name: "Placement Mentorship",
     tagline: "Full 1:1 support with weekly calls, mock interviews & job referrals",
-    fallbackPrice: 29999,
+    fallbackPrice: 14999,
   },
 };
 
@@ -73,6 +73,29 @@ export default async function CheckoutPage({
 
   if (enrolledSlugs.includes(SLUG_MAP[product])) {
     redirect("/dashboard");
+  }
+
+  // Gate: placement-mentorship requires an approved application
+  if (product === "placement-mentorship") {
+    const serviceSupabaseGate = createServiceClient();
+    const { data: application } = await serviceSupabaseGate
+      .from("mentorship_applications")
+      .select("status")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (application?.status === "pending") {
+      redirect("/apply/placement-mentorship/submitted");
+    }
+    if (!application || application.status === "rejected") {
+      redirect("/apply/placement-mentorship");
+    }
+    if (application.status === "enrolled") {
+      redirect("/dashboard/placement-mentorship");
+    }
+    // Only 'invited' falls through to checkout
   }
 
   const info = PRODUCT_INFO[product];

@@ -15,7 +15,8 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
+import type { MentorshipApplicationStatus } from "@/lib/supabase/types";
 
 const COMPANY_LOGOS = [
   { name: "Amazon", src: "/logos/amazon.svg" },
@@ -95,11 +96,12 @@ const PRODUCTS = [
     slug: "placement_mentorship",
     href: "/products/placement-mentorship",
     icon: Trophy,
-    badge: "Premium",
+    badge: "Invite Only",
     badgeVariant: "secondary" as const,
     name: "Placement Mentorship",
-    defaultPrice: 29999,
-    ctaVerb: "Get Mentored",
+    defaultPrice: 14999,
+    ctaVerb: "Request Invite",
+    isInviteOnly: true,
     tagline: "Full 1:1 support until you get the offer",
     features: [
       "Complete profile rebuild",
@@ -192,12 +194,28 @@ function interpolatePrices(text: string, priceMap: Map<string, number>): string 
 }
 
 export default async function HomePage() {
+  const supabase = createClient();
   const serviceSupabase = createServiceClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+
   const [{ data: dbProducts }, { data: settingsRows }, { data: dbFaqs }] = await Promise.all([
     serviceSupabase.from("products").select("slug, price_inr, original_price").eq("is_active", true),
     serviceSupabase.from("site_settings").select("key, value"),
     serviceSupabase.from("faqs").select("id, question, answer").is("product_id", null).order("sort_order", { ascending: true }),
   ]);
+
+  let mentorshipAppStatus: MentorshipApplicationStatus | null = null;
+  if (user) {
+    const appResult = await supabase
+      .from("mentorship_applications")
+      .select("status")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    mentorshipAppStatus = ((appResult.data as { status: string } | null)?.status as MentorshipApplicationStatus) ?? null;
+  }
 
   const priceMap = new Map((dbProducts ?? []).map((p) => [p.slug, p.price_inr]));
   const originalPriceMap = new Map((dbProducts ?? []).map((p) => [p.slug, p.original_price as number | null]));
@@ -335,19 +353,28 @@ export default async function HomePage() {
                       {product.tagline}
                     </p>
                     <div className="mb-6">
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-bold">{formatCurrency(price)}</span>
-                        {hasDiscount && (
-                          <span className="text-lg text-muted-foreground line-through">
-                            {formatCurrency(originalPrice!)}
-                          </span>
-                        )}
-                      </div>
-                      {showGst && (
-                        <span className="text-sm text-muted-foreground">+ 18% GST</span>
+                      {product.isInviteOnly ? (
+                        <div>
+                          <div className="text-3xl font-bold">{formatCurrency(price)}</div>
+                          <span className="text-sm text-amber-600 font-medium">on approval — by application</span>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-3xl font-bold">{formatCurrency(price)}</span>
+                            {hasDiscount && (
+                              <span className="text-lg text-muted-foreground line-through">
+                                {formatCurrency(originalPrice!)}
+                              </span>
+                            )}
+                          </div>
+                          {showGst && (
+                            <span className="text-sm text-muted-foreground">+ 18% GST</span>
+                          )}
+                        </>
                       )}
                     </div>
-                    <ul className="space-y-2.5 mb-8 flex-1">
+                    <ul className="space-y-2.5 mb-6 flex-1">
                       {product.features.map((f) => (
                         <li key={f} className="flex items-start gap-2 text-sm">
                           <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
@@ -355,15 +382,54 @@ export default async function HomePage() {
                         </li>
                       ))}
                     </ul>
-                    <Link href={product.href} className="mt-auto">
-                      <Button
-                        className="w-full"
-                        variant={product.highlight ? "default" : "outline"}
-                        size="lg"
+                    {product.isInviteOnly && (
+                      <p className="text-xs text-muted-foreground mb-4">
+                        Limited seats. Application required.
+                      </p>
+                    )}
+                    {/* Application status chip for invite-only product */}
+                    {product.isInviteOnly && mentorshipAppStatus === "pending" && (
+                      <div className="mb-3 flex items-center gap-2 text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                        <span className="h-2 w-2 rounded-full bg-amber-400 shrink-0" />
+                        Application submitted — under review
+                      </div>
+                    )}
+                    {product.isInviteOnly && mentorshipAppStatus === "invited" && (
+                      <div className="mb-3 flex items-center gap-2 text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                        <span className="h-2 w-2 rounded-full bg-green-500 shrink-0" />
+                        You&apos;re invited — complete enrollment
+                      </div>
+                    )}
+                    {product.isInviteOnly && mentorshipAppStatus === "rejected" && (
+                      <div className="mb-3 flex items-center gap-2 text-xs font-medium text-muted-foreground bg-muted border rounded-lg px-3 py-2">
+                        <span className="h-2 w-2 rounded-full bg-muted-foreground/50 shrink-0" />
+                        Not selected — re-apply after 90 days
+                      </div>
+                    )}
+                    {product.isInviteOnly && mentorshipAppStatus === "enrolled" ? null : (
+                      <Link
+                        href={
+                          product.isInviteOnly && mentorshipAppStatus === "invited"
+                            ? "/checkout/placement-mentorship"
+                            : product.href
+                        }
+                        className="mt-auto"
                       >
-                        {product.ctaVerb} - {formatCurrency(price)}
-                      </Button>
-                    </Link>
+                        <Button
+                          className="w-full"
+                          variant={product.highlight ? "default" : "outline"}
+                          size="lg"
+                        >
+                          {product.isInviteOnly
+                            ? mentorshipAppStatus === "pending"
+                              ? "Requested"
+                              : mentorshipAppStatus === "invited"
+                              ? "Complete Enrollment →"
+                              : product.ctaVerb
+                            : `${product.ctaVerb} - ${formatCurrency(price)}`}
+                        </Button>
+                      </Link>
+                    )}
                   </CardContent>
                 </Card>
               );

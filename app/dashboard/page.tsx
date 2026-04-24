@@ -41,7 +41,7 @@ const PRODUCT_INFO = [
     iconColor: "text-amber-600",
     dashboardHref: "/dashboard/placement-mentorship",
     productHref: "/products/placement-mentorship",
-    fallbackPrice: 29999,
+    fallbackPrice: 14999,
     tagline: "Full 1:1 support until placed",
   },
 ];
@@ -73,6 +73,15 @@ export default async function DashboardPage() {
       .select("key, value")
       .in("key", ["show_gst"]),
   ]);
+
+  const mentorshipAppResult = await supabase
+    .from("mentorship_applications")
+    .select("status")
+    .eq("user_id", user!.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const mentorshipAppStatus = ((mentorshipAppResult.data as { status: string } | null)?.status ?? null) as import("@/lib/supabase/types").MentorshipApplicationStatus | null;
 
   const settingsMap = Object.fromEntries(
     (settings ?? []).map((s) => [s.key, s.value])
@@ -167,6 +176,9 @@ export default async function DashboardPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {notEnrolled.map((product) => {
               const Icon = product.icon;
+              const isMentorship = product.slug === "placement_mentorship";
+              const appStatus = isMentorship ? mentorshipAppStatus : null;
+
               return (
                 <Card
                   key={product.slug}
@@ -182,20 +194,72 @@ export default async function DashboardPage() {
                     <div className="text-xs text-muted-foreground mt-0.5 mb-3">
                       {product.tagline}
                     </div>
-                    <div className="font-bold mb-3">
-                      ₹{product.price.toLocaleString("en-IN")}
-                      {showGst && (
-                        <span className="text-xs font-normal text-muted-foreground ml-1">
-                          + GST
-                        </span>
-                      )}
-                    </div>
-                    <Link href={product.productHref}>
-                      <Button size="sm" className="w-full">
-                        Learn More
-                        <ArrowRight className="h-3.5 w-3.5" />
-                      </Button>
-                    </Link>
+
+                    {/* Application status chip */}
+                    {appStatus === "pending" && (
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-2.5 py-1.5 mb-3">
+                        <span className="h-1.5 w-1.5 rounded-full bg-amber-400 shrink-0" />
+                        Requested — under review
+                      </div>
+                    )}
+                    {appStatus === "invited" && (
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded-md px-2.5 py-1.5 mb-3">
+                        <span className="h-1.5 w-1.5 rounded-full bg-green-500 shrink-0" />
+                        Invited — complete enrollment
+                      </div>
+                    )}
+                    {appStatus === "rejected" && (
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground bg-muted border rounded-md px-2.5 py-1.5 mb-3">
+                        <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/40 shrink-0" />
+                        Not selected — re-apply after 90 days
+                      </div>
+                    )}
+
+                    {!isMentorship && (
+                      <div className="font-bold mb-3">
+                        ₹{product.price.toLocaleString("en-IN")}
+                        {showGst && (
+                          <span className="text-xs font-normal text-muted-foreground ml-1">
+                            + GST
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {isMentorship && !appStatus && (
+                      <div className="text-xs text-amber-600 font-medium mb-3">
+                        ₹{product.price.toLocaleString("en-IN")} — on approval
+                      </div>
+                    )}
+
+                    {appStatus === "pending" ? (
+                      <Link href="/dashboard/placement-mentorship">
+                        <Button size="sm" variant="outline" className="w-full">
+                          View Status
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        </Button>
+                      </Link>
+                    ) : appStatus === "invited" ? (
+                      <Link href="/checkout/placement-mentorship">
+                        <Button size="sm" className="w-full">
+                          Complete Enrollment
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        </Button>
+                      </Link>
+                    ) : isMentorship ? (
+                      <Link href="/apply/placement-mentorship">
+                        <Button size="sm" variant="outline" className="w-full">
+                          Request Invite
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Link href={product.productHref}>
+                        <Button size="sm" className="w-full">
+                          Learn More
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        </Button>
+                      </Link>
+                    )}
                   </CardContent>
                 </Card>
               );

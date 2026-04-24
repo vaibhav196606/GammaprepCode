@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
-import { AlertTriangle, DollarSign, FileSearch, Users } from "lucide-react";
+import { AlertTriangle, ClipboardList, DollarSign, FileSearch, Users } from "lucide-react";
 
 export default async function AdminPage() {
   const supabase = createClient();
@@ -14,6 +14,7 @@ export default async function AdminPage() {
     { data: enrollmentsByProduct },
     { data: revenueByProduct },
     { data: pendingAudits },
+    { count: pendingApplicationsCount },
   ] = await Promise.all([
     supabase.from("profiles").select("*", { count: "exact", head: true }),
     supabase
@@ -30,6 +31,10 @@ export default async function AdminPage() {
       .in("submission_status", ["submitted", "under_review"])
       .order("submitted_at", { ascending: true })
       .limit(5),
+    supabase
+      .from("mentorship_applications")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "pending"),
   ]);
 
   // Process revenue
@@ -116,6 +121,24 @@ export default async function AdminPage() {
             </div>
           </CardContent>
         </Card>
+
+        <Link href="/admin/mentorship-applications">
+          <Card className={`cursor-pointer hover:shadow-md transition-shadow ${(pendingApplicationsCount ?? 0) > 0 ? "border-amber-300" : ""}`}>
+            <CardContent className="p-5">
+              <div className="flex items-center gap-3">
+                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${(pendingApplicationsCount ?? 0) > 0 ? "bg-amber-100" : "bg-muted"}`}>
+                  <ClipboardList className={`h-5 w-5 ${(pendingApplicationsCount ?? 0) > 0 ? "text-amber-600" : "text-muted-foreground"}`} />
+                </div>
+                <div>
+                  <div className={`text-2xl font-bold ${(pendingApplicationsCount ?? 0) > 0 ? "text-amber-600" : ""}`}>
+                    {pendingApplicationsCount ?? 0}
+                  </div>
+                  <div className="text-xs text-muted-foreground">Pending applications</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
         {overdueSlaCount > 0 && (
           <Card className="border-red-200">

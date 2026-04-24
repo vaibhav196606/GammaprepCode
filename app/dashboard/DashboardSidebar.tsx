@@ -98,7 +98,10 @@ export default function DashboardSidebar({ name, enrolledSlugs, isAdmin }: Props
           {ALL_PRODUCTS.filter((p) => !enrolledSlugs.includes(p.slug)).map(
             (product) => {
               const Icon = product.icon;
-              const href = `/products/${product.slug.replace(/_/g, "-")}`;
+              const isInviteOnly = product.slug === "placement_mentorship";
+              const href = isInviteOnly
+                ? "/dashboard/placement-mentorship"
+                : `/products/${product.slug.replace(/_/g, "-")}`;
               return (
                 <Link
                   key={product.slug}
@@ -108,7 +111,7 @@ export default function DashboardSidebar({ name, enrolledSlugs, isAdmin }: Props
                   <Icon className="h-4 w-4 opacity-50" />
                   {product.label}
                   <Badge variant="outline" className="ml-auto text-xs py-0">
-                    Get
+                    {isInviteOnly ? "Apply" : "Get"}
                   </Badge>
                 </Link>
               );

@@ -303,6 +303,69 @@ create policy "Admins can manage all audits"
 
 
 -- ============================================================
+-- MENTORSHIP APPLICATIONS (invite-only application flow)
+-- ============================================================
+create table if not exists public.mentorship_applications (
+  id                 uuid primary key default uuid_generate_v4(),
+  user_id            uuid not null references public.profiles(id) on delete cascade,
+
+  full_name          text not null,
+  email              text not null,
+  phone              text,
+
+  "current_role"     text not null,
+  current_company    text,
+  years_experience   integer not null check (years_experience >= 0 and years_experience <= 50),
+  target_role        text not null,
+  timeline           text not null check (timeline in ('immediate','1_to_3_months','3_to_6_months','exploring')),
+  goals              text not null,
+  motivation         text not null,
+
+  linkedin_url       text,
+  github_url         text,
+  portfolio_url      text,
+  resume_url         text,
+  target_companies   text,
+  heard_from         text,
+
+  status             text not null default 'pending'
+                       check (status in ('pending','invited','rejected','enrolled')),
+  admin_notes        text,
+  reviewed_at        timestamptz,
+  invited_at         timestamptz,
+  rejected_at        timestamptz,
+  enrolled_at        timestamptz,
+
+  submitted_at       timestamptz not null default now(),
+  created_at         timestamptz not null default now()
+);
+
+-- Only one active (pending/invited) application per user at a time
+create unique index if not exists mentorship_applications_one_active_per_user
+  on public.mentorship_applications (user_id)
+  where status in ('pending','invited');
+
+alter table public.mentorship_applications enable row level security;
+
+create policy "Users can read their own mentorship application"
+  on public.mentorship_applications for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert their own mentorship application"
+  on public.mentorship_applications for insert
+  with check (auth.uid() = user_id);
+
+create policy "Admins can manage all mentorship applications"
+  on public.mentorship_applications for all
+  using (
+    exists (
+      select 1 from public.profiles p
+      where p.id = auth.uid() and p.is_admin = true
+    )
+  );
+
+
+-- ============================================================
 -- MENTOR CALL REQUESTS
 -- One scheduling request per audit (unique constraint on audit_id)
 -- ============================================================

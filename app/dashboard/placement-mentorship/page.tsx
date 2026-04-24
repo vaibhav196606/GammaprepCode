@@ -9,6 +9,7 @@ import {
   BriefcaseBusiness,
   CalendarDays,
   CheckCircle2,
+  Clock,
   ExternalLink,
   MessageSquare,
   Trophy,
@@ -38,15 +39,127 @@ export default async function PlacementMentorshipDashboard() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: enrollment } = await supabase
-    .from("enrollments")
-    .select("id, enrolled_at, products(slug)")
-    .eq("user_id", user!.id)
-    .eq("is_active", true)
-    .filter("products.slug", "eq", "placement_mentorship")
-    .single();
+  if (!user) redirect("/login");
 
-  if (!enrollment) redirect("/products/placement-mentorship");
+  const [{ data: enrollment }, { data: application }] = await Promise.all([
+    supabase
+      .from("enrollments")
+      .select("id, enrolled_at, products(slug)")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .filter("products.slug", "eq", "placement_mentorship")
+      .maybeSingle(),
+    supabase
+      .from("mentorship_applications")
+      .select("status, submitted_at, target_role")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+  ]);
+
+  // Not enrolled — show invite-only state based on application status
+  if (!enrollment) {
+    if (application?.status === "pending") {
+      const submittedAt = application.submitted_at ? new Date(application.submitted_at) : new Date();
+      const replyBy = new Date(submittedAt);
+      replyBy.setDate(replyBy.getDate() + 5);
+      const replyByStr = replyBy.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
+
+      return (
+        <div className="max-w-lg space-y-6">
+          <div className="flex items-center gap-2">
+            <Trophy className="h-6 w-6 text-amber-600" />
+            <h1 className="text-2xl font-bold">Placement Mentorship</h1>
+            <Badge className="bg-amber-100 text-amber-800 border-amber-200">Invite Only</Badge>
+          </div>
+          <Card>
+            <CardContent className="p-6 flex flex-col items-center text-center gap-4">
+              <Clock className="h-10 w-10 text-amber-500" />
+              <div>
+                <div className="font-semibold text-lg mb-1">Application under review</div>
+                <p className="text-muted-foreground text-sm">
+                  Your application for <strong>{application.target_role}</strong> is being reviewed.
+                  You&apos;ll hear from us by <strong>{replyByStr}</strong>.
+                </p>
+              </div>
+              <a href="https://wa.me/918890240404" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="sm">Any questions? WhatsApp us</Button>
+              </a>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
+
+    if (application?.status === "invited") {
+      return (
+        <div className="max-w-lg space-y-6">
+          <div className="flex items-center gap-2">
+            <Trophy className="h-6 w-6 text-amber-600" />
+            <h1 className="text-2xl font-bold">Placement Mentorship</h1>
+            <Badge className="bg-amber-100 text-amber-800 border-amber-200">Invite Only</Badge>
+          </div>
+          <Card className="border-green-200">
+            <CardContent className="p-6 flex flex-col items-center text-center gap-4">
+              <div className="text-4xl">🎉</div>
+              <div>
+                <div className="font-semibold text-lg mb-1">You&apos;re invited!</div>
+                <p className="text-muted-foreground text-sm">
+                  We&apos;ve reviewed your application and would love to have you. Complete enrollment to lock in your spot.
+                </p>
+              </div>
+              <Link href="/checkout/placement-mentorship">
+                <Button size="lg" className="shadow-lg shadow-primary/20">
+                  Complete Enrollment
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
+
+    // No application or rejected
+    return (
+      <div className="max-w-lg space-y-6">
+        <div className="flex items-center gap-2">
+          <Trophy className="h-6 w-6 text-amber-600" />
+          <h1 className="text-2xl font-bold">Placement Mentorship</h1>
+          <Badge className="bg-amber-100 text-amber-800 border-amber-200">Invite Only</Badge>
+        </div>
+        <Card>
+          <CardContent className="p-6 space-y-4">
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Full 1:1 support until you get the offer — weekly calls, mock interviews, referrals, and complete profile rebuild.
+              This program is invite-only to keep quality high.
+            </p>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" /> Complete profile rebuild</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" /> Weekly live mentoring calls</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" /> 2–3 mock interviews with detailed feedback</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" /> Job referrals &amp; cold outreach templates</li>
+            </ul>
+            {application?.status === "rejected" && (
+              <p className="text-xs text-amber-700 bg-amber-50 rounded px-3 py-2">
+                Your previous application wasn&apos;t selected. You can re-apply after 90 days.
+              </p>
+            )}
+            <Link href="/apply/placement-mentorship" className="block">
+              <Button className="w-full" size="lg">
+                Request Invite
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <p className="text-xs text-muted-foreground text-center">
+              5-min application · Hear back in 3 business days
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const { data: currentWeek } = await supabase
     .from("mentorship_weeks")

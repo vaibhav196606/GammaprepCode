@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendEnrollmentEmail } from "@/lib/email";
+
 import { getCashfreeConfig } from "@/lib/cashfree";
 import crypto from "crypto";
 
@@ -99,6 +100,18 @@ export async function POST(req: Request) {
         { onConflict: "enrollment_id" }
       );
     }
+  }
+
+  // Flip mentorship application to enrolled on placement_mentorship payment
+  if (product?.slug === "placement_mentorship") {
+    await serviceSupabase
+      .from("mentorship_applications")
+      .update({
+        status: "enrolled",
+        enrolled_at: new Date().toISOString(),
+      })
+      .eq("user_id", order.user_id)
+      .eq("status", "invited");
   }
 
   // Promo usage

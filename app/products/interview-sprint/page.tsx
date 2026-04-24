@@ -121,12 +121,14 @@ const TESTIMONIALS = [
 
 export default async function InterviewSprintPage() {
   const serviceSupabase = createServiceClient();
-  const [{ data: dbProduct }, { data: settingsRows }] = await Promise.all([
+  const [{ data: dbProduct }, { data: dbAudit }, { data: settingsRows }] = await Promise.all([
     serviceSupabase.from("products").select("price_inr, original_price").eq("slug", "interview_sprint").eq("is_active", true).single(),
+    serviceSupabase.from("products").select("price_inr").eq("slug", "career_audit").eq("is_active", true).single(),
     serviceSupabase.from("site_settings").select("key, value"),
   ]);
   const PRICE = dbProduct?.price_inr ?? 9999;
   const ORIGINAL_PRICE = (dbProduct?.original_price as number | null) ?? null;
+  const AUDIT_PRICE = dbAudit?.price_inr ?? 499;
   const siteSettings: Record<string, unknown> = {};
   (settingsRows ?? []).forEach((r: { key: string; value: unknown }) => { siteSettings[r.key] = r.value; });
   const showGst = (siteSettings.show_gst as boolean) ?? true;
@@ -273,7 +275,7 @@ export default async function InterviewSprintPage() {
                 Haven&apos;t done your Career Audit yet?
               </div>
               <p className="text-sm text-muted-foreground">
-                Start with the ₹499 Audit to find your specific gaps. Then use the
+                Start with the ₹{AUDIT_PRICE.toLocaleString("en-IN")} Audit to find your specific gaps. Then use the
                 Sprint to fix them - it&apos;s 2x more effective that way.
               </p>
             </div>

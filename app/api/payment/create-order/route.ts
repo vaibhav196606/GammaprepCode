@@ -72,6 +72,24 @@ export async function POST(req: Request) {
     );
   }
 
+  // Gate: placement_mentorship requires an approved (invited) application
+  if (productSlug === "placement_mentorship") {
+    const { data: application } = await serviceSupabase
+      .from("mentorship_applications")
+      .select("status")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (!application || application.status !== "invited") {
+      return NextResponse.json(
+        { error: "Placement Mentorship is invite-only. Please apply first." },
+        { status: 403 }
+      );
+    }
+  }
+
   // Validate promo code
   let discountPct = 0;
   if (promoCode) {

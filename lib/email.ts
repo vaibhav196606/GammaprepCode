@@ -179,6 +179,191 @@ export async function sendAdminCallRequestNotification({
   });
 }
 
+export async function sendApplicationReceivedEmail({
+  to,
+  name,
+  targetRole,
+  replyByDate,
+}: {
+  to: string;
+  name: string;
+  targetRole: string;
+  replyByDate: string;
+}) {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://gammaprep.com";
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "Your Placement Mentorship application is in 👀",
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #111;">
+        <h2 style="font-size: 24px; margin-bottom: 8px;">Hi ${name}, we've got your application!</h2>
+        <p style="color: #555; margin-bottom: 24px;">
+          We read every application personally. You applied for a spot in our <strong>Placement Mentorship</strong>
+          program targeting <strong>${targetRole}</strong>.
+        </p>
+
+        <div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+          <p style="margin: 0; font-size: 15px; color: #92400e;">
+            <strong>⏳ What's next?</strong><br/>
+            Our team will review your application and get back to you by <strong>${replyByDate}</strong>.
+            You'll receive an invite email if you're selected.
+          </p>
+        </div>
+
+        <p style="color: #555; margin-bottom: 24px;">
+          In the meantime, feel free to browse your dashboard or explore our other programs.
+        </p>
+
+        <a href="${appUrl}/dashboard" style="display: inline-block; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+          Go to Dashboard →
+        </a>
+
+        <p style="color: #999; font-size: 13px; margin-top: 32px;">
+          Questions? Reply to this email or WhatsApp us at +91 88902 40404.
+        </p>
+      </div>
+    `,
+  });
+}
+
+export async function sendAdminApplicationNotification({
+  userName,
+  userEmail,
+  applicationId,
+  targetRole,
+  yearsExperience,
+  timeline,
+}: {
+  userName: string;
+  userEmail: string;
+  applicationId: string;
+  targetRole: string;
+  yearsExperience: number;
+  timeline: string;
+}) {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://gammaprep.com";
+  const timelineLabels: Record<string, string> = {
+    immediate: "Immediate",
+    "1_to_3_months": "1–3 months",
+    "3_to_6_months": "3–6 months",
+    exploring: "Just exploring",
+  };
+
+  await resend.emails.send({
+    from: FROM,
+    to: "info@gammaprep.com",
+    subject: `New mentorship application — ${userName}`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px;">
+        <h2>New Mentorship Application</h2>
+        <p><strong>Name:</strong> ${userName}</p>
+        <p><strong>Email:</strong> ${userEmail}</p>
+        <p><strong>Target role:</strong> ${targetRole}</p>
+        <p><strong>Years of experience:</strong> ${yearsExperience}</p>
+        <p><strong>Timeline:</strong> ${timelineLabels[timeline] ?? timeline}</p>
+        <a href="${appUrl}/admin/mentorship-applications/${applicationId}"
+           style="display: inline-block; background: #111; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin-top: 8px;">
+          Review Application →
+        </a>
+      </div>
+    `,
+  });
+}
+
+export async function sendApplicationInviteEmail({
+  to,
+  name,
+}: {
+  to: string;
+  name: string;
+}) {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://gammaprep.com";
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "You're invited to Placement Mentorship 🎉",
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #111;">
+        <h2 style="font-size: 24px; margin-bottom: 8px;">Congrats, ${name} — you're in!</h2>
+        <p style="color: #555; margin-bottom: 24px;">
+          We reviewed your application and we'd love to have you in our <strong>Placement Mentorship</strong> program.
+          You've been selected based on your goals and fit.
+        </p>
+
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+          <p style="margin: 0; font-size: 15px; color: #166534;">
+            <strong>Your invite is ready.</strong><br/>
+            Complete your enrollment at <strong>₹14,999</strong> to lock in your spot.
+            Seats are limited and this invite is personal to you.
+          </p>
+        </div>
+
+        <a href="${appUrl}/checkout/placement-mentorship" style="display: inline-block; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 24px;">
+          Complete Enrollment →
+        </a>
+
+        <p style="color: #555; font-size: 14px;">
+          After enrollment, our team will reach out within 24 hours to schedule your first weekly call.
+        </p>
+
+        <p style="color: #999; font-size: 13px; margin-top: 32px;">
+          Questions? Reply to this email or WhatsApp us at +91 88902 40404.
+        </p>
+      </div>
+    `,
+  });
+}
+
+export async function sendApplicationRejectedEmail({
+  to,
+  name,
+  adminNotes,
+}: {
+  to: string;
+  name: string;
+  adminNotes?: string | null;
+}) {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://gammaprep.com";
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "About your Placement Mentorship application",
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #111;">
+        <h2 style="font-size: 24px; margin-bottom: 8px;">Hi ${name},</h2>
+        <p style="color: #555; margin-bottom: 16px;">
+          Thank you for taking the time to apply to our Placement Mentorship program. We genuinely appreciate
+          your interest and the effort you put into your application.
+        </p>
+
+        <p style="color: #555; margin-bottom: 16px;">
+          After careful review, we're not moving forward with your application at this time.
+          ${adminNotes ? `<br/><br/><strong>Feedback from our team:</strong> ${adminNotes}` : ""}
+        </p>
+
+        <p style="color: #555; margin-bottom: 24px;">
+          This isn't a permanent door closing — you're welcome to re-apply in <strong>90 days</strong>
+          if your situation changes. In the meantime, our
+          <a href="${appUrl}/products/interview-sprint" style="color: #4f46e5;">Interview Sprint</a>
+          is a great way to build momentum while you prepare.
+        </p>
+
+        <a href="${appUrl}/products/interview-sprint" style="display: inline-block; border: 2px solid #4f46e5; color: #4f46e5; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+          Explore Interview Sprint →
+        </a>
+
+        <p style="color: #999; font-size: 13px; margin-top: 32px;">
+          Questions? Reply to this email or WhatsApp us at +91 88902 40404.
+        </p>
+      </div>
+    `,
+  });
+}
+
 export async function sendCallConfirmedEmail({
   to,
   name,

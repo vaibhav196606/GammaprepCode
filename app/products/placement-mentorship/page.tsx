@@ -14,8 +14,8 @@ import {
   Trophy,
   Users,
 } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
+import type { MentorshipApplicationStatus } from "@/lib/supabase/types";
 
 export const metadata: Metadata = {
   title: "Placement Mentorship - 1:1 Career Coaching Until You Get Placed",
@@ -101,13 +101,31 @@ const TESTIMONIALS = [
 ];
 
 export default async function PlacementMentorshipPage() {
+  const supabase = createClient();
   const serviceSupabase = createServiceClient();
-  const [{ data: dbProduct }, { data: settingsRows }] = await Promise.all([
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const [{ data: dbProduct }, { data: dbSprint }, { data: settingsRows }] = await Promise.all([
     serviceSupabase.from("products").select("price_inr, original_price").eq("slug", "placement_mentorship").eq("is_active", true).single(),
+    serviceSupabase.from("products").select("price_inr").eq("slug", "interview_sprint").eq("is_active", true).single(),
     serviceSupabase.from("site_settings").select("key, value"),
   ]);
-  const PRICE = dbProduct?.price_inr ?? 29999;
+  const PRICE = dbProduct?.price_inr ?? 14999;
   const ORIGINAL_PRICE = (dbProduct?.original_price as number | null) ?? null;
+  const SPRINT_PRICE = dbSprint?.price_inr ?? 9999;
+
+  let appStatus: MentorshipApplicationStatus | null = null;
+  if (user) {
+    const appResult = await supabase
+      .from("mentorship_applications")
+      .select("status")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    appStatus = ((appResult.data as { status: string } | null)?.status as MentorshipApplicationStatus) ?? null;
+  }
   const siteSettings: Record<string, unknown> = {};
   (settingsRows ?? []).forEach((r: { key: string; value: unknown }) => { siteSettings[r.key] = r.value; });
   const showGst = (siteSettings.show_gst as boolean) ?? true;
@@ -116,12 +134,17 @@ export default async function PlacementMentorshipPage() {
 
   return (
     <div>
+      {/* Exclusivity banner */}
+      <div className="bg-amber-50 border-b border-amber-200 py-3 px-4 text-center text-sm text-amber-800">
+        <strong>By application only</strong> — we accept a limited number of mentees each month to keep 1:1 quality high.
+      </div>
+
       {/* Hero */}
       <section className="py-20 px-4 bg-gradient-to-b from-amber-50/80 to-background">
         <div className="container max-w-5xl">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <Badge className="mb-4 bg-amber-600">Premium - Full support</Badge>
+              <Badge className="mb-4 bg-amber-600">Invite Only</Badge>
               <h1 className="text-4xl md:text-5xl font-bold leading-tight text-balance">
                 Full 1:1 support until{" "}
                 <span className="gradient-primary-text">you get the offer</span>
@@ -131,13 +154,56 @@ export default async function PlacementMentorshipPage() {
                 interviews, job referrals, and direct mentor access. Everything
                 you need to stop trying alone and start getting placed.
               </p>
-              <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                <Link href="/checkout/placement-mentorship">
-                  <Button size="xl" className="w-full sm:w-auto shadow-lg shadow-primary/20">
-                    Get Mentored - {formatCurrency(PRICE)}
-                    <ArrowRight className="h-5 w-5" />
+
+              {/* 3-step process strip */}
+              <div className="mt-6 mb-6 flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
+                <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium text-xs">1. Apply (5 min)</span>
+                <ArrowRight className="h-3 w-3 shrink-0" />
+                <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium text-xs">2. Review (3 days)</span>
+                <ArrowRight className="h-3 w-3 shrink-0" />
+                <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium text-xs">3. Enroll if invited</span>
+              </div>
+
+              {/* Application status chip */}
+              {appStatus === "pending" && (
+                <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2">
+                  <span className="h-2 w-2 rounded-full bg-amber-400 shrink-0" />
+                  Application submitted — under review. You&apos;ll hear from us shortly.
+                </div>
+              )}
+              {appStatus === "invited" && (
+                <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-2">
+                  <span className="h-2 w-2 rounded-full bg-green-500 shrink-0" />
+                  You&apos;re invited! Complete your enrollment below.
+                </div>
+              )}
+              {appStatus === "rejected" && (
+                <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground bg-muted border rounded-lg px-4 py-2">
+                  <span className="h-2 w-2 rounded-full bg-muted-foreground/40 shrink-0" />
+                  Your application wasn&apos;t selected this time. You may re-apply after 90 days.
+                </div>
+              )}
+
+              <div className="mt-4 flex flex-col sm:flex-row gap-4">
+                {appStatus === "invited" ? (
+                  <Link href="/checkout/placement-mentorship">
+                    <Button size="xl" className="w-full sm:w-auto shadow-lg shadow-primary/20">
+                      Complete Enrollment
+                      <ArrowRight className="h-5 w-5" />
+                    </Button>
+                  </Link>
+                ) : appStatus === "pending" ? (
+                  <Button size="xl" disabled className="w-full sm:w-auto opacity-60">
+                    Requested
                   </Button>
-                </Link>
+                ) : (
+                  <Link href="/apply/placement-mentorship">
+                    <Button size="xl" className="w-full sm:w-auto shadow-lg shadow-primary/20">
+                      Request Invite
+                      <ArrowRight className="h-5 w-5" />
+                    </Button>
+                  </Link>
+                )}
                 <a href="https://wa.me/918890240404" target="_blank" rel="noopener noreferrer">
                   <Button size="xl" variant="outline" className="w-full sm:w-auto">
                     Talk to us first
@@ -151,7 +217,7 @@ export default async function PlacementMentorshipPage() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Shield className="h-4 w-4 text-green-500" />
-                  Secure payment via Cashfree
+                  We read every application
                 </div>
               </div>
             </div>
@@ -166,6 +232,7 @@ export default async function PlacementMentorshipPage() {
                       <span className="text-xl text-muted-foreground line-through">₹{ORIGINAL_PRICE.toLocaleString("en-IN")}</span>
                     )}
                   </div>
+                  <div className="text-amber-600 text-sm font-medium mt-1">on approval — invite only</div>
                   {showGst && (
                     <div className="text-muted-foreground text-sm mt-1">
                       + ₹{GST.toLocaleString("en-IN")} GST = ₹{TOTAL.toLocaleString("en-IN")} total
@@ -184,14 +251,31 @@ export default async function PlacementMentorshipPage() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/checkout/placement-mentorship" className="block">
-                  <Button className="w-full" size="lg">
-                    Start Your Mentorship
-                    <ArrowRight className="h-4 w-4" />
+                {appStatus === "invited" ? (
+                  <Link href="/checkout/placement-mentorship" className="block">
+                    <Button className="w-full" size="lg">
+                      Complete Enrollment
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                ) : appStatus === "pending" ? (
+                  <Button className="w-full" size="lg" disabled>
+                    Requested
                   </Button>
-                </Link>
+                ) : (
+                  <Link href="/apply/placement-mentorship" className="block">
+                    <Button className="w-full" size="lg">
+                      Request Invite
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                )}
                 <p className="text-xs text-muted-foreground text-center mt-4">
-                  Limited spots. Not sure? Chat with us on WhatsApp first.
+                  {appStatus === "pending"
+                    ? "Under review — you'll hear back within 3 business days."
+                    : appStatus === "invited"
+                    ? "Your invite is ready. Lock in your spot now."
+                    : "Hear back within 3 business days."}
                 </p>
               </CardContent>
             </Card>
@@ -233,7 +317,7 @@ export default async function PlacementMentorshipPage() {
                 Not sure if Mentorship is right for you yet?
               </div>
               <p className="text-sm text-muted-foreground">
-                Start with the Interview Sprint at ₹9,999. Many students upgrade
+                Start with the Interview Sprint at ₹{SPRINT_PRICE.toLocaleString("en-IN")}. Many students upgrade
                 to Mentorship after their first mock interview.
               </p>
             </div>
@@ -246,6 +330,27 @@ export default async function PlacementMentorshipPage() {
         </div>
       </section>
 
+      {/* Who we're looking for */}
+      <section className="py-10 px-4 bg-amber-50/40">
+        <div className="container max-w-3xl">
+          <h2 className="text-xl font-bold mb-4">Who we&apos;re looking for</h2>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+              Targeting a tech role at a renowned MNC or top product company (Google, Microsoft, Amazon, Flipkart, Zepto, etc.)
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+              Looking to move in the next 6 months — not just curious
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+              Open to a weekly commitment (calls, assignments, feedback)
+            </li>
+          </ul>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-16 px-4">
         <div className="container max-w-2xl text-center">
@@ -253,12 +358,12 @@ export default async function PlacementMentorshipPage() {
             Ready for full 1:1 support?
           </h2>
           <p className="text-muted-foreground text-lg mb-8">
-            Limited to 5 mentees at a time. Apply now to secure your spot.
+            Limited to 5 mentees at a time. Apply and hear back in 3 business days.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/checkout/placement-mentorship">
+            <Link href="/apply/placement-mentorship">
               <Button size="xl" className="shadow-lg shadow-primary/20">
-                Get Mentored - {formatCurrency(PRICE)}
+                Request Invite
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>

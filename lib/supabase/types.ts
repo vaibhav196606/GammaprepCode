@@ -25,6 +25,18 @@ export type ApplicationStatus =
   | "offer"
   | "rejected";
 
+export type MentorshipApplicationStatus =
+  | "pending"
+  | "invited"
+  | "rejected"
+  | "enrolled";
+
+export type MentorshipTimeline =
+  | "immediate"
+  | "1_to_3_months"
+  | "3_to_6_months"
+  | "exploring";
+
 export type SessionType = "group_session" | "mock_interview";
 
 export interface Database {
@@ -428,6 +440,65 @@ export interface Database {
         };
         Update: {
           value?: unknown;
+        };
+        Relationships: [];
+      };
+      mentorship_applications: {
+        Row: {
+          id: string;
+          user_id: string;
+          full_name: string;
+          email: string;
+          phone: string | null;
+          current_role: string;
+          current_company: string | null;
+          years_experience: number;
+          target_role: string;
+          timeline: MentorshipTimeline;
+          goals: string;
+          motivation: string;
+          linkedin_url: string | null;
+          github_url: string | null;
+          portfolio_url: string | null;
+          resume_url: string | null;
+          target_companies: string | null;
+          heard_from: string | null;
+          status: MentorshipApplicationStatus;
+          admin_notes: string | null;
+          reviewed_at: string | null;
+          invited_at: string | null;
+          rejected_at: string | null;
+          enrolled_at: string | null;
+          submitted_at: string;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          full_name: string;
+          email: string;
+          phone?: string | null;
+          current_role: string;
+          current_company?: string | null;
+          years_experience: number;
+          target_role: string;
+          timeline: MentorshipTimeline;
+          goals: string;
+          motivation: string;
+          linkedin_url?: string | null;
+          github_url?: string | null;
+          portfolio_url?: string | null;
+          resume_url?: string | null;
+          target_companies?: string | null;
+          heard_from?: string | null;
+        };
+        Update: {
+          status?: MentorshipApplicationStatus;
+          admin_notes?: string | null;
+          reviewed_at?: string | null;
+          invited_at?: string | null;
+          rejected_at?: string | null;
+          enrolled_at?: string | null;
+          resume_url?: string | null;
         };
         Relationships: [];
       };
