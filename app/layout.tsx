@@ -91,10 +91,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Script
-          id="meta-pixel"
-          strategy="afterInteractive"
+      <head>
+        {/* Meta Pixel — inline in <head> so Facebook's bot can detect it */}
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               !function(f,b,e,v,n,t,s)
@@ -110,6 +109,17 @@ export default async function RootLayout({
             `,
           }}
         />
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+            alt=""
+          />
+        </noscript>
+      </head>
+      <body className={inter.className}>
         {GA_ID && (
           <>
             <Script
