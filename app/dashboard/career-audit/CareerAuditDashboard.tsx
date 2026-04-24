@@ -22,6 +22,7 @@ import {
   Upload,
 } from "lucide-react";
 import type { AuditStatus, BiggestChallenge, MentorCallStatus, ProductSlug } from "@/lib/supabase/types";
+import { formatCurrency } from "@/lib/utils";
 
 const ROLES = [
   "Fresher / Student",
@@ -109,6 +110,7 @@ interface Props {
   enrollmentId: string;
   onboarding: OnboardingData | null;
   callRequest: CallRequestData | null;
+  interviewSprintPrice: number;
 }
 
 const STATUS_CONFIG: Record<
@@ -128,7 +130,7 @@ const formatIST = (iso: string) =>
     timeZone: "Asia/Kolkata",
   }).format(new Date(iso));
 
-export default function CareerAuditDashboard({ audit, enrollmentId, onboarding, callRequest }: Props) {
+export default function CareerAuditDashboard({ audit, enrollmentId, onboarding, callRequest, interviewSprintPrice }: Props) {
   const [linkedinUrl, setLinkedinUrl] = useState(audit?.linkedin_url ?? "");
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -623,7 +625,7 @@ export default function CareerAuditDashboard({ audit, enrollmentId, onboarding, 
                   <div className="flex flex-col sm:flex-row gap-3">
                     <Link href="/checkout/interview-sprint">
                       <Button size="sm">
-                        Start Interview Sprint - ₹9,999
+                        Start Interview Sprint - {formatCurrency(interviewSprintPrice)}
                         <ArrowRight className="h-3.5 w-3.5" />
                       </Button>
                     </Link>

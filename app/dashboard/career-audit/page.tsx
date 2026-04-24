@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import CareerAuditDashboard from "./CareerAuditDashboard";
 
 export default async function CareerAuditDashboardPage() {
@@ -33,14 +33,22 @@ export default async function CareerAuditDashboardPage() {
     .eq("user_id", user!.id)
     .single();
 
-  // Get mentor call request if audit exists
-  const { data: callRequest } = audit
-    ? await supabase
-        .from("mentor_call_requests")
-        .select("id, preferred_slots, status, confirmed_slot, meeting_link, created_at")
-        .eq("audit_id", audit.id)
-        .maybeSingle()
-    : { data: null };
+  const serviceSupabase = createServiceClient();
+  const [{ data: callRequest }, { data: interviewSprintProduct }] = await Promise.all([
+    audit
+      ? supabase
+          .from("mentor_call_requests")
+          .select("id, preferred_slots, status, confirmed_slot, meeting_link, created_at")
+          .eq("audit_id", audit.id)
+          .maybeSingle()
+      : Promise.resolve({ data: null }),
+    serviceSupabase
+      .from("products")
+      .select("price_inr")
+      .eq("slug", "interview_sprint")
+      .eq("is_active", true)
+      .single(),
+  ]);
 
   return (
     <CareerAuditDashboard
@@ -48,6 +56,7 @@ export default async function CareerAuditDashboardPage() {
       enrollmentId={enrollment.id}
       onboarding={onboarding}
       callRequest={callRequest ?? null}
+      interviewSprintPrice={interviewSprintProduct?.price_inr ?? 9999}
     />
   );
 }

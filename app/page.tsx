@@ -31,19 +31,29 @@ const COMPANY_LOGOS = [
   { name: "Oracle", src: "/logos/oracle.svg" },
 ];
 
-export const metadata: Metadata = {
-  title: "Gammaprep - Career Coaching for Software Engineers in India",
-  description:
-    "Get interview-ready with expert career coaching. Start with a ₹499 Career Audit, advance with our Interview Sprint, or fast-track with 1:1 Placement Mentorship.",
-  alternates: {
-    canonical: "https://gammaprep.com",
-  },
-  openGraph: {
-    title: "Gammaprep - Career Coaching for Software Engineers",
-    description:
-      "Expert career coaching for software engineers. Resume audit, interview prep, and placement mentorship.",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const serviceSupabase = createServiceClient();
+  const { data: product } = await serviceSupabase
+    .from("products")
+    .select("price_inr")
+    .eq("slug", "career_audit")
+    .eq("is_active", true)
+    .single();
+  const price = product?.price_inr ?? 499;
+  const formatted = `₹${price.toLocaleString("en-IN")}`;
+  return {
+    title: "Gammaprep - Career Coaching for Software Engineers in India",
+    description: `Get interview-ready with expert career coaching. Start with a ${formatted} Career Audit, advance with our Interview Sprint, or fast-track with 1:1 Placement Mentorship.`,
+    alternates: {
+      canonical: "https://gammaprep.com",
+    },
+    openGraph: {
+      title: "Gammaprep - Career Coaching for Software Engineers",
+      description:
+        "Expert career coaching for software engineers. Resume audit, interview prep, and placement mentorship.",
+    },
+  };
+}
 
 const PRODUCTS = [
   {
@@ -118,13 +128,7 @@ const PRODUCTS = [
 ];
 
 
-const HOW_IT_WORKS = [
-  {
-    step: "01",
-    title: "Get your Career Audit",
-    description:
-      "Start with a ₹499 expert review. Upload your resume and LinkedIn. Our experts send back a detailed gap analysis within 48 hours.",
-  },
+const howItWorksSteps_STATIC = [
   {
     step: "02",
     title: "Follow the Interview Sprint",
@@ -220,6 +224,18 @@ export default async function HomePage() {
   const priceMap = new Map((dbProducts ?? []).map((p) => [p.slug, p.price_inr]));
   const originalPriceMap = new Map((dbProducts ?? []).map((p) => [p.slug, p.original_price as number | null]));
 
+  const careerAuditPrice = priceMap.get("career_audit") ?? 499;
+  const careerAuditFormatted = formatCurrency(careerAuditPrice);
+
+  const howItWorksSteps = [
+    {
+      step: "01",
+      title: "Get your Career Audit",
+      description: `Start with a ${careerAuditFormatted} expert review. Upload your resume and LinkedIn. Our experts send back a detailed gap analysis within 48 hours.`,
+    },
+    ...howItWorksSteps_STATIC,
+  ];
+
   const settings: Record<string, unknown> = {};
   (settingsRows ?? []).forEach((r) => { settings[r.key] = r.value; });
   const showGst = (settings.show_gst as boolean) ?? true;
@@ -246,7 +262,7 @@ export default async function HomePage() {
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/products/career-audit">
               <Button size="xl" className="w-full sm:w-auto shadow-lg shadow-primary/20">
-                Start with Career Audit - ₹499
+                Start with Career Audit - {careerAuditFormatted}
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
@@ -511,10 +527,10 @@ export default async function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-3">
-            {HOW_IT_WORKS.map((step, i) => (
+            {howItWorksSteps.map((step, i) => (
               <div key={step.step} className="relative flex flex-col items-center text-center px-4 md:px-6 pb-10 last:pb-0 md:pb-0">
                 {/* Vertical connector between steps on mobile */}
-                {i < HOW_IT_WORKS.length - 1 && (
+                {i < howItWorksSteps.length - 1 && (
                   <div className="md:hidden absolute left-1/2 -translate-x-1/2 top-12 bottom-0 w-px bg-border" />
                 )}
                 {/* Circle + horizontal connectors on desktop */}
@@ -523,7 +539,7 @@ export default async function HomePage() {
                   <div className="shrink-0 h-12 w-12 flex items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-sm mx-2 shadow-md shadow-primary/20">
                     {step.step}
                   </div>
-                  <div className={`hidden md:block flex-1 h-px ${i === HOW_IT_WORKS.length - 1 ? "opacity-0" : "bg-border"}`} />
+                  <div className={`hidden md:block flex-1 h-px ${i === howItWorksSteps.length - 1 ? "opacity-0" : "bg-border"}`} />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
@@ -534,7 +550,7 @@ export default async function HomePage() {
           <div className="flex justify-center mt-10">
             <Link href="/products/career-audit">
               <Button size="lg" className="shadow-md shadow-primary/20">
-                Start with Career Audit for ₹499 <ArrowRight className="h-4 w-4" />
+                Start with Career Audit for {careerAuditFormatted} <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
           </div>
@@ -663,7 +679,7 @@ export default async function HomePage() {
               Ready to find out what&apos;s blocking you?
             </h2>
             <p className="text-white/80 text-base sm:text-lg mb-8">
-              Start with a ₹499 Career Audit. Get your gaps, your action plan,
+              Start with a {careerAuditFormatted} Career Audit. Get your gaps, your action plan,
               and clarity - in 48 hours.
             </p>
             <Link href="/products/career-audit" className="block w-full sm:w-auto">
@@ -671,7 +687,7 @@ export default async function HomePage() {
                 size="lg"
                 className="w-full sm:w-auto sm:text-base sm:h-14 sm:px-10 sm:font-semibold bg-white text-primary hover:bg-white/90 shadow-lg"
               >
-                Get My Career Audit - ₹499
+                Get My Career Audit - {careerAuditFormatted}
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
