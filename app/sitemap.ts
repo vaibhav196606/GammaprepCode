@@ -35,15 +35,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${BASE_URL}/testimonials`,
-      lastModified: new Date("2025-04-01"),
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
-    {
       url: `${BASE_URL}/stories`,
       lastModified: new Date("2025-04-01"),
-      changeFrequency: "monthly",
+      changeFrequency: "weekly",
       priority: 0.6,
     },
     {

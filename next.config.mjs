@@ -14,6 +14,15 @@ const nextConfig = {
       { protocol: "https", hostname: "gammaprep.com" },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/testimonials",
+        destination: "/stories",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
