@@ -102,6 +102,19 @@ export async function sendAuditReportEmail({
           View My Report →
         </a>
 
+        <div style="background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+          <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #3730a3;">
+            🎁 Free bonus: Schedule a 1:1 strategy call with your mentor
+          </p>
+          <p style="margin: 0 0 16px 0; font-size: 14px; color: #4338ca;">
+            Book a free 30-minute live session to walk through your audit findings and build a
+            personalised action plan with your mentor. Pick your preferred time slots from your dashboard.
+          </p>
+          <a href="${appUrl}/dashboard/career-audit" style="display: inline-block; background: #4f46e5; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
+            Schedule My Free Call →
+          </a>
+        </div>
+
         <p style="color: #555; margin-bottom: 16px;">
           After reading your report, if you want expert help <strong>fixing</strong> these gaps fast -
           the Interview Sprint is designed for exactly that. Many students who start with the Audit
