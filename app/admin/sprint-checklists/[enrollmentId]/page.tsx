@@ -28,7 +28,7 @@ export default async function AdminChecklistEditorPage({
 
   const { data: enrollment } = await serviceSupabase
     .from("enrollments")
-    .select("id, user_id, enrolled_at, profiles(name, phone)")
+    .select("id, user_id, created_at, profiles(name, phone)")
     .eq("id", params.enrollmentId)
     .single();
 
@@ -62,7 +62,7 @@ export default async function AdminChecklistEditorPage({
         </h1>
         <p className="text-muted-foreground mt-1 text-sm">
           {studentProfile?.phone ?? "no phone"} • enrolled{" "}
-          {formatDate(enrollment.enrolled_at)}
+          {formatDate(enrollment.created_at)}
         </p>
       </div>
 

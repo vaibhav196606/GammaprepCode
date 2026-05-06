@@ -10,7 +10,7 @@ import { formatDate } from "@/lib/utils";
 type EnrollmentRow = {
   id: string;
   user_id: string;
-  enrolled_at: string;
+  created_at: string;
   profiles: { name: string | null; phone: string | null } | null;
 };
 
@@ -30,22 +30,13 @@ export default async function AdminSprintChecklistsPage() {
 
   const serviceSupabase = createServiceClient();
 
-  const { data: sprintProduct } = await serviceSupabase
-    .from("products")
-    .select("id")
-    .eq("slug", "interview_sprint")
-    .single();
+  const { data: rawEnrollments } = await serviceSupabase
+    .from("enrollments")
+    .select("id, user_id, created_at, profiles(name, phone), products!inner(slug)")
+    .eq("products.slug", "interview_sprint")
+    .order("created_at", { ascending: false });
 
-  const enrollments = sprintProduct
-    ? ((
-        await serviceSupabase
-          .from("enrollments")
-          .select("id, user_id, enrolled_at, profiles(name, phone)")
-          .eq("product_id", sprintProduct.id)
-          .eq("is_active", true)
-          .order("enrolled_at", { ascending: false })
-      ).data as EnrollmentRow[] | null) ?? []
-    : [];
+  const enrollments = (rawEnrollments ?? []) as unknown as EnrollmentRow[];
 
   const enrollmentIds = enrollments.map((e) => e.id);
   const { data: items } = enrollmentIds.length
@@ -95,7 +86,7 @@ export default async function AdminSprintChecklistsPage() {
                     </div>
                     <div className="text-xs text-muted-foreground mt-0.5">
                       {e.profiles?.phone ?? "no phone"} • enrolled{" "}
-                      {formatDate(e.enrolled_at)}
+                      {formatDate(e.created_at)}
                     </div>
                   </div>
                   <Badge variant={c.total === 0 ? "outline" : "secondary"}>
