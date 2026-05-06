@@ -26,8 +26,7 @@ export default async function DashboardLayout({
   const { data: enrollments } = await supabase
     .from("enrollments")
     .select("id, products(slug, name)")
-    .eq("user_id", user.id)
-    .eq("is_active", true);
+    .eq("user_id", user.id);
 
   const enrolledSlugs =
     enrollments?.map(

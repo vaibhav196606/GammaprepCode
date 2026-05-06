@@ -27,7 +27,6 @@ export default async function InterviewSprintDashboard() {
     .from("enrollments")
     .select("id, enrolled_at, products!inner(slug)")
     .eq("user_id", user!.id)
-    .eq("is_active", true)
     .eq("products.slug", "interview_sprint")
     .maybeSingle();
 

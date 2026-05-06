@@ -11,11 +11,10 @@ export default async function CareerAuditDashboardPage() {
   // Check enrollment
   const { data: enrollment } = await supabase
     .from("enrollments")
-    .select("id, products(slug)")
+    .select("id, products!inner(slug)")
     .eq("user_id", user!.id)
-    .eq("is_active", true)
-    .filter("products.slug", "eq", "career_audit")
-    .single();
+    .eq("products.slug", "career_audit")
+    .maybeSingle();
 
   if (!enrollment) redirect("/products/career-audit");
 

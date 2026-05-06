@@ -46,7 +46,6 @@ export default async function PlacementMentorshipDashboard() {
       .from("enrollments")
       .select("id, enrolled_at, products!inner(slug)")
       .eq("user_id", user.id)
-      .eq("is_active", true)
       .eq("products.slug", "placement_mentorship")
       .maybeSingle(),
     supabase
