@@ -25,7 +25,7 @@ export default async function InterviewSprintDashboard() {
 
   const { data: enrollment } = await supabase
     .from("enrollments")
-    .select("id, enrolled_at, products!inner(slug)")
+    .select("id, created_at, products!inner(slug)")
     .eq("user_id", user!.id)
     .eq("products.slug", "interview_sprint")
     .maybeSingle();
@@ -68,7 +68,7 @@ export default async function InterviewSprintDashboard() {
         </h1>
         <p className="text-muted-foreground mt-1">
           21-day interview prep program • Enrolled{" "}
-          {formatDate(enrollment.enrolled_at)}
+          {formatDate(enrollment.created_at)}
         </p>
       </div>
 

@@ -44,7 +44,7 @@ export default async function PlacementMentorshipDashboard() {
   const [{ data: enrollment }, { data: application }] = await Promise.all([
     supabase
       .from("enrollments")
-      .select("id, enrolled_at, products!inner(slug)")
+      .select("id, created_at, products!inner(slug)")
       .eq("user_id", user.id)
       .eq("products.slug", "placement_mentorship")
       .maybeSingle(),
@@ -184,7 +184,7 @@ export default async function PlacementMentorshipDashboard() {
           Placement Mentorship
         </h1>
         <p className="text-muted-foreground mt-1">
-          Full 1:1 support • Enrolled {formatDate(enrollment.enrolled_at)}
+          Full 1:1 support • Enrolled {formatDate(enrollment.created_at)}
         </p>
       </div>
 
