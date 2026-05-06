@@ -25,11 +25,11 @@ export default async function InterviewSprintDashboard() {
 
   const { data: enrollment } = await supabase
     .from("enrollments")
-    .select("id, enrolled_at, products(slug)")
+    .select("id, enrolled_at, products!inner(slug)")
     .eq("user_id", user!.id)
     .eq("is_active", true)
-    .filter("products.slug", "eq", "interview_sprint")
-    .single();
+    .eq("products.slug", "interview_sprint")
+    .maybeSingle();
 
   if (!enrollment) redirect("/products/interview-sprint");
 
