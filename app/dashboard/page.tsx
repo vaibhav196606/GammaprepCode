@@ -62,8 +62,7 @@ export default async function DashboardPage() {
     supabase
       .from("enrollments")
       .select("id, products(slug, name)")
-      .eq("user_id", user!.id)
-      .eq("is_active", true),
+      .eq("user_id", user!.id),
     supabase
       .from("products")
       .select("slug, price_inr")
