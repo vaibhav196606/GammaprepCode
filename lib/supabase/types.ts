@@ -286,6 +286,41 @@ export interface Database {
         };
         Relationships: [];
       };
+      sprint_checklist_items: {
+        Row: {
+          id: string;
+          user_id: string;
+          enrollment_id: string;
+          day_number: number;
+          title: string;
+          description: string | null;
+          sort_order: number;
+          completed: boolean;
+          completed_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          enrollment_id: string;
+          day_number: number;
+          title: string;
+          description?: string | null;
+          sort_order?: number;
+          completed?: boolean;
+          completed_at?: string | null;
+        };
+        Update: {
+          day_number?: number;
+          title?: string;
+          description?: string | null;
+          sort_order?: number;
+          completed?: boolean;
+          completed_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       mentorship_weeks: {
         Row: {
           id: string;

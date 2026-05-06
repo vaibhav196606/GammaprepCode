@@ -479,6 +479,42 @@ create policy "Admins can manage all attendance"
 
 
 -- ============================================================
+-- SPRINT CHECKLIST ITEMS (per-student 21-day plan)
+-- ============================================================
+create table if not exists public.sprint_checklist_items (
+  id            uuid primary key default uuid_generate_v4(),
+  user_id       uuid not null references public.profiles(id) on delete cascade,
+  enrollment_id uuid not null references public.enrollments(id) on delete cascade,
+  day_number    integer not null check (day_number between 1 and 21),
+  title         text not null,
+  description   text,
+  sort_order    integer not null default 0,
+  completed     boolean not null default false,
+  completed_at  timestamptz,
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now()
+);
+
+create index if not exists sprint_checklist_items_user_day_idx
+  on public.sprint_checklist_items (user_id, day_number, sort_order);
+
+alter table public.sprint_checklist_items enable row level security;
+
+create policy "Users can read own checklist items"
+  on public.sprint_checklist_items for select
+  using (auth.uid() = user_id);
+
+create policy "Users can update completion on own items"
+  on public.sprint_checklist_items for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+create policy "Admins can manage all checklist items"
+  on public.sprint_checklist_items for all
+  using (public.is_admin());
+
+
+-- ============================================================
 -- MENTORSHIP WEEKS
 -- ============================================================
 create table if not exists public.mentorship_weeks (

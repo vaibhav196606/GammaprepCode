@@ -9,11 +9,13 @@ import {
   CalendarDays,
   CheckCircle2,
   ExternalLink,
+  ListChecks,
   Rocket,
   Trophy,
   Video,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import ChecklistView from "./ChecklistView";
 
 export default async function InterviewSprintDashboard() {
   const supabase = createClient();
@@ -41,6 +43,13 @@ export default async function InterviewSprintDashboard() {
     .from("sprint_session_attendance")
     .select("session_id, attended")
     .eq("user_id", user!.id);
+
+  const { data: checklistItems } = await supabase
+    .from("sprint_checklist_items")
+    .select("id, day_number, title, description, completed")
+    .eq("enrollment_id", enrollment.id)
+    .order("day_number", { ascending: true })
+    .order("sort_order", { ascending: true });
 
   const attendedIds = new Set(
     (attendance ?? []).filter((a) => a.attended).map((a) => a.session_id)
@@ -161,6 +170,19 @@ export default async function InterviewSprintDashboard() {
               })}
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      {/* 21-Day Plan */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <ListChecks className="h-4 w-4" />
+            Your 21-Day Plan
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ChecklistView initialItems={checklistItems ?? []} />
         </CardContent>
       </Card>
 

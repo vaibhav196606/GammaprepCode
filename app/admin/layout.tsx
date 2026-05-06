@@ -10,6 +10,7 @@ const NAV = [
   { href: "/admin/users", label: "Users" },
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/sprint", label: "Sprint Sessions" },
+  { href: "/admin/sprint-checklists", label: "Sprint Checklists" },
   { href: "/admin/promo-codes", label: "Promo Codes" },
   { href: "/admin/faqs", label: "FAQs" },
   { href: "/admin/settings", label: "Settings" },
